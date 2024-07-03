@@ -9,7 +9,7 @@ export default function Sidebar(props: Props) {
   const [value, setValue] = React.useState(sidebarDataLinkList[0].value);
   console.log({ value });
   return (
-    <aside className=" h-full flex flex-col px-2">
+    <aside className=" h-full bg-[#F4F4FF] flex flex-col px-2">
       <div>Image</div>
       <div className=" flex-col flex gap-2">
         {sidebarDataLinkList.map((field) => (
@@ -40,7 +40,7 @@ const SidebarLink = (props: SidebarLinkProps) => {
       className={cn(
         " flex items-center gap-1 px-3 rounded-xl py-4 outline-none",
         " text-[#3D3844] font-semibold",
-        "data-[app-active=true]:bg-blue-800 data-[app-active=true]:text-white"
+        "data-[app-active=true]:bg-[#01008E] data-[app-active=true]:text-white",
       )}
       onClick={props.onClick}
     >

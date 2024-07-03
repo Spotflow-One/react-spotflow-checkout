@@ -1,12 +1,13 @@
-import React from "react";
-import MainLayout from "./views/layouts/main.layout";
+// import React from "react";
+// import MainLayout from "./views/layouts/main.layout";
+import Checkouts from "./views/checkouts/checkouts";
 
 function App() {
-  const [count, setCount] = React.useState("transfer");
+  // const [count, setCount] = React.useState("transfer");
 
   return (
     <>
-      <MainLayout tab={count} onChange={(values) => setCount(values)} />
+      <Checkouts />
     </>
   );
 }
