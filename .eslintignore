@@ -1,0 +1,12 @@
+dist
+.yarn
+**/*.spec.ts
+**/*.spec.tsx
+**/*.cjs
+.eslintrc.cjs
+**/*.spec.ts
+**/*.spec.tsx
+**/*.cjs
+tailwind.config.js
+commitlint.config.js
+vite.config.ts
