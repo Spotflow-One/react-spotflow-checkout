@@ -1,21 +1,29 @@
 import React from "react";
 import { cn } from "../lib/utils";
+import CircularProgress from "./circular-progress";
 
 type Props = React.ComponentPropsWithRef<"button"> & {
-  label?: React.ReactNode;
+  // label?: React.ReactNode;
+  loading?: boolean;
+  endAdornment?: React.ReactNode;
 };
 const Button = React.forwardRef<HTMLButtonElement, Props>((props, ref) => {
-  const { label, className, ...rest } = props;
+  const { children, className, loading, endAdornment, ...rest } = props;
   return (
     <button
       ref={ref}
       {...rest}
       className={cn(
-        " w-full py-2 disabled:text-[#AAAAD9] text-white rounded-lg px-3 bg-[#01008E] disabled:bg-[#F4F4FF]",
+        " w-full py-4 flex gap-3 text-sm text-white rounded-lg px-3 justify-center",
+        "disabled:text-[#AAAAD9] disabled:bg-[#F4F4FF] bg-[#01008E]",
         className,
       )}
     >
-      {label}
+      {/* <span></span> */}
+      <span className=" flex-1">
+        {loading ? <CircularProgress /> : children}
+      </span>
+      {endAdornment}
     </button>
   );
 });

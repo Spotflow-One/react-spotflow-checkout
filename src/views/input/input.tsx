@@ -4,9 +4,20 @@ import { cn } from "../../lib/utils";
 type Props = React.ComponentPropsWithRef<"input"> & {
   DivContainer?: React.ComponentProps<"div">;
   label: React.ReactNode;
+  endAdornment?: React.ReactNode;
+  startAdornment?: React.ReactNode;
 };
 export default function Input(props: Props) {
-  const { name, id, className, DivContainer, label, ...rest } = props;
+  const {
+    name,
+    id,
+    className,
+    DivContainer,
+    label,
+    startAdornment,
+    endAdornment,
+    ...rest
+  } = props;
   return (
     <div
       className={cn(
@@ -14,14 +25,18 @@ export default function Input(props: Props) {
         DivContainer?.className,
       )}
     >
-      <label htmlFor={id || name}>{label}</label>
+      <label className=" text-[#9E9BA1] text-xs" htmlFor={id || name}>
+        {label}
+      </label>
       <div className=" flex items-center gap-1">
+        {startAdornment}
         <input
           {...rest}
           id={id || name}
           type={rest.type || "text"}
           className={cn(" outline-none w-full px-1", className)}
         />
+        {endAdornment}
       </div>
     </div>
   );
