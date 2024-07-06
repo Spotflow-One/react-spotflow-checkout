@@ -1,9 +1,11 @@
 import React from "react";
 import CopyIcon from "../../assets/copy-icon.svg?react";
+import TransferSuccess from "../../assets/transfer-success-icon.svg?react";
 import WarningIcon from "../../assets/warning-icon.svg?react";
 import CircularProgress from "../circular-progress";
 import Button from "../button";
 import { cn } from "../../lib/utils";
+import { useTimer } from "../../hooks/use-timer";
 
 export function PayTransfer() {
   const [screen, setScreen] = React.useState("detail");
@@ -15,7 +17,7 @@ export function PayTransfer() {
       >
         <TransferDetail
           onSubmit={() => {
-            setScreen("expiry");
+            setScreen("auto");
           }}
         />
       </div>
@@ -29,13 +31,27 @@ export function PayTransfer() {
         data-state={screen}
         className={cn(" hidden data-[state=auto]:block")}
       >
-        <TransactionAuto />
+        <TransactionAuto
+          onWait={() => {
+            setScreen("wait");
+          }}
+        />
       </div>
       <div
         data-state={screen}
         className={cn(" hidden data-[state=wait]:block")}
       >
-        <WaitingView />
+        <WaitingView
+          onNext={() => {
+            setScreen("success");
+          }}
+        />
+      </div>
+      <div
+        data-state={screen}
+        className={cn(" hidden data-[state=success]:block")}
+      >
+        <SuccessView />
       </div>
     </div>
   );
@@ -146,35 +162,46 @@ const AccountExpiry = () => {
   );
 };
 
-const TransactionAuto = () => {
+type TransactionAutoProps = {
+  onWait(): void;
+};
+const TransactionAuto = (props: TransactionAutoProps) => {
   const [state, setState] = React.useState("first");
   return (
-    <div className=" grid gap-6">
+    <div className=" grid gap-6 max-w-[290px] w-full mx-auto">
       <div className=" flex flex-col items-center gap-3">
-        <h1>
-          We’ll complete this transaction automatically once we confirm your
-          transfer.
+        <h1 className=" text-center text-xl text-[#55515B]">
+          {state === "first"
+            ? " We’ll complete this transaction automatically once we confirm your transfer."
+            : "If you have any issues with this transfer, please contact us via support@spotflow.com"}
         </h1>
         <div className=" flex items-center gap-2">
           <FilledSpan active={state === "first"} />
           <FilledSpan active={state === "second"} />
         </div>
       </div>
-      <div className=" justify-self-center">
+      <div className=" ">
         {state === "first" && (
           <Button
             type="button"
             onClick={() => {
               setState("second");
             }}
+            className="border-[#C0B5CF] border bg-white text-[#55515B]"
           >
             Next
           </Button>
         )}
         {state === "second" && (
-          <div>
+          <div className=" grid gap-3">
             <Button className=" bg-[#32BB78]">Close Checkout</Button>
-            <button type="button" className=" text-[#55515B]">
+            <button
+              type="button"
+              className=" text-[#55515B] text-center w-full"
+              onClick={() => {
+                props.onWait();
+              }}
+            >
               Keep waiting
             </button>
           </div>
@@ -191,26 +218,56 @@ const FilledSpan = (props: FilledSpanProps) => {
   return (
     <span
       className={cn(
-        " w-3 h-3 rounded-full inline-block",
-        props.active && "bg-[#01008E]",
+        " w-3 h-3 rounded-full border border-[#C0B5CF] inline-block",
+        props.active && "bg-[#01008E] border-0",
       )}
     />
   );
 };
 
-const WaitingView = () => {
+type WaitingProps = {
+  onNext(): void;
+};
+
+const WaitingView = (props: WaitingProps) => {
+  const { formatted, seconds } = useTimer(40);
+
+  React.useEffect(() => {
+    if (seconds === 0) props.onNext();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seconds]);
+
   return (
     <div className=" grid gap-5 max-w-[404px] w-full mx-auto">
-      <h4>
+      <h4 className=" text-center">
         We’re waiting to confirm your transfer. This can take a few minutes
       </h4>
       <div> loader coming</div>
-      <div>
-        <Button className="bg-[#3D3844] text-[#FFFFFF]">
-          Please wait for 8:53 minutes
+      <div className=" grid gap-3">
+        <Button className="border-[#C0B5CF] border bg-white text-[#55515B]">
+          Please wait for {formatted}
         </Button>
-        <button>Show account number</button>
+        <button type="button" className=" w-full text-center text-[#55515B]">
+          Show account number
+        </button>
       </div>
+    </div>
+  );
+};
+
+const SuccessView = () => {
+  return (
+    <div className=" grid gap-[50px] max-w-[300px] w-full mx-auto">
+      <div className=" flex flex-col items-center gap-6">
+        <TransferSuccess />
+        <p className=" text-[#55515B] text-xl text-center">
+          Your payment has been received
+        </p>
+      </div>
+      <Button className="border-[#C0B5CF] border bg-white text-[#55515B]">
+        Close
+      </Button>
     </div>
   );
 };
