@@ -8,12 +8,17 @@ import { cn } from "../../lib/utils";
 type Props = {
   onClick(_val: string): void;
 };
+
 export default function Sidebar(props: Props) {
   const [value, setValue] = React.useState(sidebarDataLinkList[0].value);
   return (
-    <aside className=" h-full bg-[#F4F4FF] flex flex-col px-2">
-      <div>Image</div>
-      <div className=" flex-col flex gap-2">
+    <aside className=" h-full bg-[#F4F4FF] flex flex-col py-4 px-8 lg:px-2">
+      <img
+        src="https://res.cloudinary.com/du7qw0hpn/image/upload/v1720260601/image_3_xyiqdn.png"
+        alt=""
+        className=" w-12 h-auto bg-contain"
+      />
+      <div className=" flex-col gap-2 hidden lg:flex">
         {sidebarDataLinkList.map((field) => (
           <SidebarLink
             key={field.value}
