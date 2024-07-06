@@ -33,6 +33,7 @@ export default function Input(props: Props) {
         <input
           {...rest}
           id={id || name}
+          name={name}
           type={rest.type || "text"}
           className={cn(" outline-none w-full px-1", className)}
         />

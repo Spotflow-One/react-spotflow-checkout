@@ -261,7 +261,7 @@ const SuccessView = () => {
     <div className=" grid gap-[50px] max-w-[300px] w-full mx-auto">
       <div className=" flex flex-col items-center gap-6">
         <TransferSuccess />
-        <p className=" text-[#55515B] text-xl text-center">
+        <p className=" text-[#55515B] text-xl font-semibold text-center">
           Your payment has been received
         </p>
       </div>
