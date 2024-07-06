@@ -14,7 +14,7 @@ const Button = React.forwardRef<HTMLButtonElement, Props>((props, ref) => {
       ref={ref}
       {...rest}
       className={cn(
-        " w-full py-4 flex gap-3 text-sm text-white rounded-lg px-3 justify-center",
+        " w-full py-4 flex gap-3 font-semibold text-sm text-white rounded-lg px-3 justify-center",
         "disabled:text-[#AAAAD9] disabled:bg-[#F4F4FF] bg-[#01008E]",
         className,
       )}

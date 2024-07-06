@@ -11,7 +11,7 @@ export default function Select(props: Props) {
   return (
     <div className=" flex flex-col gap-3 py-3 px-4 rounded-lg border border-[#C0B5CF]">
       <label className="text-[#9E9BA1] text-xs">{label}</label>
-      <div className=" flex items-center gap-3">
+      <div className=" relative flex items-center gap-3">
         <select
           {...rest}
           title=""

@@ -2,9 +2,10 @@ import React from "react";
 import HashIcon from "../../assets/hash-icon.svg?react";
 import Select from "../input/select";
 import Button from "../button";
+import { cn } from "../../lib/utils";
 
 export function PayUssd() {
-  const [screen] = React.useState("bank");
+  const [screen, setScreen] = React.useState("bank");
   const getScreenTitle = () => {
     switch (screen) {
       case "bank":
@@ -31,32 +32,54 @@ export function PayUssd() {
           <HashIcon />
           <div>{getScreenTitle()}</div>
         </div>
-        <div data-state={screen}>
-          <ChooseBankForm />
+        <div
+          data-state={screen}
+          className={cn("hidden data-[state=bank]:block")}
+        >
+          <ChooseBankForm
+            onSubmit={() => {
+              setScreen("code");
+            }}
+          />
         </div>
-        <div data-state={screen}>
-          <CodeForm />
+        <div
+          data-state={screen}
+          className={cn(" hidden data-[state=code]:block")}
+        >
+          <CodeForm value="" />
         </div>
       </div>
     </div>
   );
 }
 
-const ChooseBankForm = () => {
+type ChooseBankFormProps = {
+  onSubmit(): void;
+};
+const ChooseBankForm = (props: ChooseBankFormProps) => {
+  const [state, setState] = React.useState<Record<string, string>>({});
   return (
     <form
       className=" grid gap-3"
       onSubmit={(e) => {
         e.preventDefault();
+        setTimeout(() => {
+          if (state.bank) props.onSubmit();
+        }, 500);
       }}
     >
       <Select
         options={bankList}
+        value={state?.bank}
+        name="bank"
         endAdornment={
           <span className=" rounded-sm bg-[#CCCCE8] font-semibold text-[#6D6A73] p-1">
             *323#
           </span>
         }
+        onChange={(e) => {
+          setState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+        }}
       />
     </form>
   );
@@ -73,10 +96,21 @@ const bankList = [
   },
 ];
 
-const CodeForm = () => {
+type CodeFormProps = {
+  value: string;
+};
+const CodeForm = (props: CodeFormProps) => {
   return (
     <div className=" grid gap-2">
-      <Button>*329*33*4*343788#</Button>
+      <Button>{props.value || "*329*33*4*343788#"} </Button>
+      <button
+        type="button"
+        onClick={() => {
+          navigator.clipboard.writeText(props.value || "*329*33*4*343788#");
+        }}
+      >
+        Click to copy
+      </button>
     </div>
   );
 };
