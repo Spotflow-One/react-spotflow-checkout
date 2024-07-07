@@ -1,7 +1,8 @@
 import React from "react";
+import { CheckoutData } from "../../checkout-types";
 
 type StateType = {
-  data: unknown;
+  data: CheckoutData;
   open: boolean;
   onOpenChange(_val: boolean): void;
 };
@@ -11,16 +12,22 @@ type CheckoutStateType = {
 const CheckoutContext = React.createContext<CheckoutStateType>({});
 
 export default function CheckoutProvider(props: {
-  data: unknown;
+  data: CheckoutData;
   children?: (_val: StateType) => React.ReactElement | React.ReactElement;
+  open?: boolean;
+  onOpenChange?: (_val: boolean) => void;
 }) {
   const [open, setOpen] = React.useState(false);
   const state: StateType = React.useMemo(() => {
     return {
       data: props.data,
-      open,
+      open: props.open || open,
       onOpenChange(value) {
-        setOpen(value);
+        if (props.onOpenChange) {
+          props.onOpenChange(value);
+        } else {
+          setOpen(value);
+        }
       },
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

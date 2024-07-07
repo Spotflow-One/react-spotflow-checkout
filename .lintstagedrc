@@ -1,0 +1,14 @@
+{
+  "./src/**/*.js": [
+    "eslint --fix",
+    "prettier --write"
+  ],
+  "./src/**/*.ts": [
+    "eslint --fix",
+    "prettier --write"
+  ],
+  "./src/**/*.tsx": [
+    "npm run lint -- --fix",
+    "prettier --write"
+  ]
+}

@@ -1,17 +1,20 @@
 import React from "react";
-import Popper from "../popper";
-import CheckoutProvider from "../context/checkout.provider";
-import Checkouts from "../checkouts/checkouts";
+import Popper from "./views/popper";
+import CheckoutProvider from "./views/context/checkout.provider";
+import Checkouts from "./views/checkouts/checkouts";
+import { CheckoutData } from "./checkout-types";
 
 type Props = {
-  data: unknown;
+  data: CheckoutData;
   actionText: string;
 };
+
 function CheckoutPayment(props: Props) {
+  const [open, setOpen] = React.useState(false);
   return (
     <React.Fragment>
       <button type="button">{props.actionText || "Pay Amount"}</button>
-      <CheckoutProvider data={props.data}>
+      <CheckoutProvider data={props.data} open={open} onOpenChange={setOpen}>
         {(values) => (
           <Popper open={values.open}>
             <Checkouts />
@@ -22,4 +25,4 @@ function CheckoutPayment(props: Props) {
   );
 }
 
-export default CheckoutPayment;
+export { CheckoutPayment };

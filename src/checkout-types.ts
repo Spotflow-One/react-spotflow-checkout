@@ -1,4 +1,4 @@
-export type CheckoutData = {
+export declare type CheckoutData = {
   productId: string;
   productName: string;
   fullname: string;

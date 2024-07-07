@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "composite": true,
+    "sourceMap": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -16,12 +17,25 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
+    "declarationMap": true,
 
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "typeRoots": ["index.d.ts", "./node_modules/@types"],
+    "declaration": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    "example",
+    "src/*.test.ts",
+    "src/*.test.tsx",
+    "src/*.test-d.ts",
+    "src/*.test-d.tsx",
+    "src/__mocks__",
+    "packages"
+  ]
 }
