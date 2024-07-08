@@ -30,6 +30,7 @@ module.exports = {
     "commitlint.config.js",
     "vite.config.ts",
     "**/*.spec.tsx",
+    "node_modules",
   ],
   parser: "@typescript-eslint/parser",
   plugins: ["react-refresh"],
