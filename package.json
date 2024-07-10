@@ -14,7 +14,7 @@
     "dev": "vite",
     "clean": "rimraf dist",
     "build": "yarn build:modern",
-    "build:vite:lib": "tsc --p ./tsconfig.build.json && vite build",
+    "build:vite:lib": "tsc --p ./tsconfig-build.json && vite build",
     "build:watch": "yarn build:modern -w",
     "lint": "eslint . --ext ts,tsx,js --report-unused-disable-directives --max-warnings 0",
     "build:modern": "rollup --bundleConfigAsCjs -c ./scripts/rollup/rollup.config.js",
