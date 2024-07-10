@@ -40,6 +40,13 @@ export function createRollupConfig(options, callback) {
     },
     external: Object.keys(pkg.peerDependencies),
     plugins: [
+      typescript({
+        tsconfig: pathResolve(rootDir, "tsconfig.app.json"),
+        clean: true,
+        exclude: ["**/__tests__", "**/*.test.ts"],
+        useTsconfigDeclarationDir: true,
+        verbosity: 3,
+      }),
       resolve({ extensions }),
       babel({
         extensions,
@@ -55,13 +62,6 @@ export function createRollupConfig(options, callback) {
           less: { javascriptEnabled: true },
         },
         extract: true,
-      }),
-      typescript({
-        tsconfig: pathResolve(rootDir, "tsconfig.json"),
-        clean: true,
-        exclude: ["**/__tests__", "**/*.test.ts"],
-        useTsconfigDeclarationDir: true,
-        verbosity: 3,
       }),
       options.format === "umd" &&
         commonjs({

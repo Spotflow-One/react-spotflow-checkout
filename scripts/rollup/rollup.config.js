@@ -1,6 +1,8 @@
 import pkg from "../../package.json";
+import { resolve as pathResolve } from "path";
 
 import { createRollupConfig } from "./create-rollup-config";
+import { rootDir } from "../config";
 
 const name = "index";
 const options = [
@@ -13,7 +15,7 @@ const options = [
   {
     name: "react-server",
     format: "esm",
-    input: "src/index.react-server.ts",
+    input: pathResolve(rootDir, "src/index.react-server.ts"),
   },
   {
     name,
