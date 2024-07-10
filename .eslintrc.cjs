@@ -35,6 +35,7 @@ module.exports = {
     "**/*.spec.tsx",
     "node_modules",
     "scripts",
+    "rollup.config.js",
   ],
   parser: "@typescript-eslint/parser",
   plugins: ["react-refresh"],

@@ -240,15 +240,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.24.1":
-  version: 7.24.7
-  resolution: "@babel/runtime@npm:7.24.7"
-  dependencies:
-    regenerator-runtime: "npm:^0.14.0"
-  checksum: 10c0/b6fa3ec61a53402f3c1d75f4d808f48b35e0dfae0ec8e2bb5c6fc79fb95935da75766e0ca534d0f1c84871f6ae0d2ebdd950727cfadb745a2cdbef13faef5513
-  languageName: node
-  linkType: hard
-
 "@babel/template@npm:^7.24.7":
   version: 7.24.7
   resolution: "@babel/template@npm:7.24.7"
@@ -1397,7 +1388,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
+"@types/node@npm:*, @types/node@npm:^20.14.10":
   version: 20.14.10
   resolution: "@types/node@npm:20.14.10"
   dependencies:
@@ -5738,6 +5729,7 @@ __metadata:
     "@rollup/plugin-commonjs": "npm:^26.0.1"
     "@rollup/plugin-node-resolve": "npm:^15.2.3"
     "@rollup/plugin-terser": "npm:^0.4.4"
+    "@types/node": "npm:^20.14.10"
     "@types/react": "npm:^18.3.3"
     "@types/react-dom": "npm:^18.3.0"
     "@types/react-test-renderer": "npm:^18"
@@ -5775,8 +5767,10 @@ __metadata:
     webpack: "npm:^5.92.1"
     webpack-cli: "npm:^5.1.4"
   peerDependencies:
+    clsx: ^2.1.1
     react: ^16.8.0 || ^17 || ^18
     react-dom: ^16.8.5 || ^17.0.0 || ^18.0.0
+    tailwind-merge: ^2.3.0
   languageName: unknown
   linkType: soft
 
@@ -5826,13 +5820,6 @@ __metadata:
   dependencies:
     resolve: "npm:^1.20.0"
   checksum: 10c0/1a30074124a22abbd5d44d802dac26407fa72a0a95f162aa5504ba8246bc5452f8b1a027b154d9bdbabcd8764920ff9333d934c46a8f17479c8912e92332f3ff
-  languageName: node
-  linkType: hard
-
-"regenerator-runtime@npm:^0.14.0":
-  version: 0.14.1
-  resolution: "regenerator-runtime@npm:0.14.1"
-  checksum: 10c0/1b16eb2c4bceb1665c89de70dcb64126a22bc8eb958feef3cd68fe11ac6d2a4899b5cd1b80b0774c7c03591dc57d16631a7f69d2daa2ec98100e2f29f7ec4cc4
   languageName: node
   linkType: hard
 
@@ -6548,11 +6535,9 @@ __metadata:
   linkType: hard
 
 "tailwind-merge@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "tailwind-merge@npm:2.3.0"
-  dependencies:
-    "@babel/runtime": "npm:^7.24.1"
-  checksum: 10c0/5ea308e23c3ab1cf4c3f35f0a471753f4d3ed232d63dd7c09151a74428737321902203d90e9f0cb76ea5c3978e71b0adbc503dc455e56cda967a7674ae4b94b5
+  version: 2.4.0
+  resolution: "tailwind-merge@npm:2.4.0"
+  checksum: 10c0/77bd20647d08db78a0bdf7b57d4b904479aee7727f44570f8834d62a1aa56f42d7ae68ac959e3d610c9f188aa164eeefb6c43df4f0c8bb7cfc3418e1575bfecb
   languageName: node
   linkType: hard
 
