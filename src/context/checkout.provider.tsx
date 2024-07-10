@@ -1,5 +1,5 @@
 import React from "react";
-import { CheckoutData } from "../../checkout-types";
+import { CheckoutData } from "@/checkout-types";
 
 type StateType = {
   data: CheckoutData;

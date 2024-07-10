@@ -2,8 +2,22 @@
   "name": "react-spotflow-checkout",
   "version": "0.0.0",
   "type": "module",
-  "source": "src/index.ts",
-  "types": "dist/index.d.ts",
+  "source": "src/index.tsx",
+  "module": "build/lib/index.es.js",
+  "main": "build/lib/index.cjs.js",
+  "types": "build/lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/lib/index.d.ts",
+      "import": "./build/lib/index.mjs",
+      "default": "./build/lib/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "/dist",
+    "/src"
+  ],
   "scripts": {
     "dev": "vite",
     "clean": "rimraf dist",
@@ -12,6 +26,7 @@
     "lint": "eslint . --ext ts,tsx,js --report-unused-disable-directives --max-warnings 0",
     "build:modern": "rollup --bundleConfigAsCjs -c ./scripts/rollup/rollup.config.js",
     "build:esm": "rollup --bundleConfigAsCjs -c ./scripts/rollup/rollup.esm.config.js",
+    "build:vite": "tsc && vite build",
     "lint-yarn": "eslint '**/*.{js,ts,tsx}'",
     "lint:fix": "yarn lint --fix",
     "type": "tsc --noEmit",
@@ -28,11 +43,14 @@
     "tailwind-merge": "^2.3.0"
   },
   "peerDependencies": {
-    "react": "^16.8.0 || ^17 || ^18 || ^19"
+    "react": "^16.8.0 || ^17 || ^18",
+    "react-dom": "^16.8.5 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
+    "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
@@ -65,7 +83,8 @@
     "vite-plugin-dts": "^3.9.1",
     "vite-plugin-svgr": "^4.2.0",
     "vite-tsconfig-paths": "^4.3.2",
-    "webpack": "^5.92.1"
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4"
   },
   "packageManager": "yarn@4.3.1+sha512.af78262d7d125afbfeed740602ace8c5e4405cd7f4735c08feb327286b2fdb2390fbca01589bfd1f50b1240548b74806767f5a063c94b67e431aabd0d86f7774"
 }
