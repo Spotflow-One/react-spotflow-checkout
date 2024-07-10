@@ -6,7 +6,8 @@
   :root {
     --font-main: "Cera";
 
-    font-family: var(--font-main), system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: var(--font-main), system-ui, Avenir, Helvetica, Arial,
+      sans-serif;
     line-height: 1.5;
     font-weight: 400;
 
@@ -58,6 +59,32 @@
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+@font-face {
+  font-family: "Proxima";
+  font-weight: 400;
+  src: url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Regular.otf"),
+    url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Regular\ Italic.otf");
+}
+/** */
+@font-face {
+  font-family: "Proxima";
+  font-weight: 600;
+  src: url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Semibold.otf"),
+    url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Semibold\ Italic.otf");
+}
+@font-face {
+  font-family: "Proxima";
+  font-weight: 700;
+  src: url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Bold.otf"),
+    url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Bold\ Italic.otf");
+}
+@font-face {
+  font-family: "Proxima";
+  font-weight: 300;
+  src: url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Thin.otf"),
+    url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Thin\ Italic.otf");
 }
 
 blockquote,
