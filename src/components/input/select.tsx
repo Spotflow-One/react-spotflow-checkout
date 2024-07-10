@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 
 type Props = React.ComponentProps<"select"> & {
   options: Array<{ label: React.ReactNode; value: string }>;

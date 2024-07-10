@@ -8,6 +8,9 @@ module.exports = {
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
+    ecmaFeatures: {
+      jsx: true,
+    },
     // project: [
     //   "./tsconfig.json",
     //   "./commitlint.config.js",
@@ -31,6 +34,7 @@ module.exports = {
     "vite.config.ts",
     "**/*.spec.tsx",
     "node_modules",
+    "scripts",
   ],
   parser: "@typescript-eslint/parser",
   plugins: ["react-refresh"],

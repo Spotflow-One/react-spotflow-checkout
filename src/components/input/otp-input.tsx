@@ -1,6 +1,6 @@
 import React from "react";
 import OTPInput, { OTPInputProps } from "react-otp-input";
-import { pxToRem } from "../../lib/utils";
+import { pxToRem } from "@/lib/utils";
 
 type Props = Omit<OTPInputProps, "renderInput"> & {
   label?: React.ReactNode;

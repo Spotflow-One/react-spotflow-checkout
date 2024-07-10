@@ -1,33 +1,32 @@
 {
   "compilerOptions": {
-    "composite": true,
-    "sourceMap": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "declarationMap": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
 
     /* Linting */
+    "forceConsistentCasingInFileNames": true,
+
+    "sourceMap": true,
+    "module": "es2015",
+    "target": "es2018",
+    "moduleResolution": "node",
+    "outDir": "./dist/lib",
+    "jsx": "react",
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    // "typeRoots": ["index.d.ts", "./node_modules/@types"],
-    "declaration": true
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "scripts"],
   "exclude": [
     "node_modules",
     "example",

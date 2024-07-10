@@ -1,17 +1,17 @@
 import React from "react";
-import Input from "../input/input";
-import Button from "../button";
-import OtpInput from "../input/otp-input";
-import WarningIcon from "../../assets/warning-icon.svg?react";
-import TransferSuccess from "../../assets/transfer-success-icon.svg?react";
-import { cn } from "../../lib/utils";
+import Input from "@/components/input/input";
+import Button from "@/components/button";
+import OtpInput from "@/components/input/otp-input";
+import WarningIcon from "@/assets/warning-icon.svg?react";
+import TransferSuccess from "@/assets/transfer-success-icon.svg?react";
+import { cn } from "@/lib/utils";
 import {
   formatCreditCardNumber,
   formatCVC,
   formatExpirationDate,
-} from "../../lib/creditCardInputs";
+} from "@/lib/creditCardInputs";
 import { cardValidator } from "./validator";
-import { useTimer } from "../../hooks/use-timer";
+import { useTimer } from "@/hooks/use-timer";
 
 export function PayCard() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
