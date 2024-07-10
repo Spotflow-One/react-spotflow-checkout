@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-main: "Cera";
+
+    font-family: var(--font-main), system-ui, Avenir, Helvetica, Arial,
+      sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer base {
+  * {
+    @apply p-0 m-0 box-border;
+  }
+  body {
+    @apply h-screen w-full;
+  }
+  #root {
+    @apply h-full;
+  }
+}
+
+@layer components {
+  .hide-scrollbar::-webkit-scrollbar {
+    @apply !hidden;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+  }
+}
+
+@layer utilities {
+  *::-webkit-scrollbar {
+    @apply w-[0.4em] h-[0.2em] bg-[#f4f4f4] cursor-pointer;
+  }
+
+  *::-webkit-scrollbar-track {
+    @apply rounded-[100vh] bg-[#999292];
+  }
+
+  *::-webkit-scrollbar-thumb {
+    @apply bg-[#e0cbcb] rounded-[100vh] border-[3px] border-[#707070] cursor-pointer;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: #53b6ed;
+  }
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@font-face {
+  font-family: "Proxima";
+  font-weight: 400;
+  src: url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Regular.otf"),
+    url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Regular\ Italic.otf");
+}
+/** */
+@font-face {
+  font-family: "Proxima";
+  font-weight: 600;
+  src: url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Semibold.otf"),
+    url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Semibold\ Italic.otf");
+}
+@font-face {
+  font-family: "Proxima";
+  font-weight: 700;
+  src: url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Bold.otf"),
+    url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Bold\ Italic.otf");
+}
+@font-face {
+  font-family: "Proxima";
+  font-weight: 300;
+  src: url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Thin.otf"),
+    url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Thin\ Italic.otf");
+}
+
+blockquote,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+figure,
+p,
+pre {
+  margin: 0;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+ol,
+ul,
+menu,
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+:disabled {
+  cursor: default;
+}
+
+input::placeholder,
+textarea::placeholder {
+  opacity: 1; /* 1 */
+  color: #9ca3af; /* 2 */
+}
+
+.modified-dialog-content {
+  max-height: calc(100vh - 8rem);
+}
+
+.rdrDateDisplayWrapper {
+  display: none;
+}
+
+.rdrMonthAndYearWrapper {
+  padding-top: 0 !important;
+  height: auto !important;
+}
+
+.rdrPprevButton {
+  margin-left: 0 !important;
+}
+
+.rdrNextButton {
+  margin-right: 0 !important;
+}
+
+.rdrMonth {
+  padding: 0 !important;
+}
+
+.rdrDateRangeWrapper .rdrMonths .rdrMonth .rdrMonthName {
+  display: none !important;
+}
