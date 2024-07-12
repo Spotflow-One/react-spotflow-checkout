@@ -13,11 +13,11 @@ type Props = {
 export default function Sidebar(props: Props) {
   const [value, setValue] = useState(sidebarDataLinkList[0].value);
   return (
-    <aside className=" h-full bg-[#F4F4FF] flex flex-col py-4 px-8 lg:px-2">
+    <aside className=" h-full bg-[#F4F4FF] flex flex-col gap-5 py-4 px-8 lg:px-2">
       <img
         src="https://res.cloudinary.com/du7qw0hpn/image/upload/v1720260601/image_3_xyiqdn.png"
         alt=""
-        className=" w-12 h-auto bg-contain"
+        className=" w-12 h-auto bg-contain self-center"
       />
       <div className=" flex-col gap-2 hidden lg:flex">
         {sidebarDataLinkList.map((field) => (

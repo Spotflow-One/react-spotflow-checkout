@@ -3,26 +3,38 @@ import { CheckoutProvider } from "@library/context/checkout.provider";
 import { CheckoutPaymentProps } from "./types";
 import { Popper } from "@library/components/popper";
 import { Checkouts } from "../checkouts/checkouts";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 0,
+    },
+    mutations: {},
+  },
+});
 
 export function CheckoutPayment(props: CheckoutPaymentProps) {
-  const [open, setOpen] = React.useState(false);
   return (
-    <React.Fragment>
-      <button
-        type="button"
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        {props.actionText || "Pay Amount"}
-      </button>
-      <CheckoutProvider data={props.data} open={open} onOpenChange={setOpen}>
-        {(values) => (
+    <CheckoutProvider data={props.data}>
+      {(values) => (
+        <React.Fragment>
+          <button
+            type="button"
+            onClick={() => {
+              values.onOpenChange(true);
+            }}
+          >
+            {props.actionText || "Pay Amount"}
+          </button>
           <Popper open={values.open}>
-            <Checkouts />
+            <QueryClientProvider client={queryClient}>
+              <Checkouts />
+            </QueryClientProvider>
           </Popper>
-        )}
-      </CheckoutProvider>
-    </React.Fragment>
+        </React.Fragment>
+      )}
+    </CheckoutProvider>
   );
 }

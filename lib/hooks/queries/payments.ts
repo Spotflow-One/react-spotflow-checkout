@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   AuthorizeCardPaymentRequest,
   CardPaymentRequest,
+  GetMerchantKeysResponse,
   PaymentResponseData,
   Prettify,
   TransferPaymentRequest,
@@ -9,19 +10,25 @@ import {
 } from "./types/payment.types";
 import { getRequest, postRequest } from "@library/api/caller";
 
-type UseCreatePaymentProps = Prettify<{
-  onSuccess(_val: unknown): void;
+type UseCardPaymentProps = Prettify<{
+  onSuccess(_val: PaymentResponseData): void;
   onError?: (_val: unknown) => void;
   onDrawer?: () => void;
+  reference: string;
 }>;
 
-export const useCreatePayment = (props: UseCreatePaymentProps) => {
-  const { onSuccess, onError, onDrawer } = props;
+export const useCardPayment = (props: UseCardPaymentProps) => {
+  const { onSuccess, onError, onDrawer, reference } = props;
   const { mutate, isError, isSuccess, reset, isPending } = useMutation({
     mutationFn: ({ payload }: CardPaymentRequest) =>
       postRequest<CardPaymentRequest["payload"], PaymentResponseData>({
         url: "payments",
         payload,
+        config: {
+          headers: {
+            Authorization: `Bearer ${reference}`,
+          },
+        },
       }),
     onSuccess: (data) => {
       onSuccess(data);
@@ -37,22 +44,28 @@ export const useCreatePayment = (props: UseCreatePaymentProps) => {
     },
   });
 
-  return { makePaymenr: mutate, isError, isSuccess, makingPayment: isPending };
+  return { makePayment: mutate, isError, isSuccess, makingPayment: isPending };
 };
 
 type UseAuthorisationProps = {
-  onSuccess(_val: unknown): void;
+  onSuccess(_val: PaymentResponseData): void;
   onError?: (_val: unknown) => void;
   onDrawer?: () => void;
+  reference: string;
 };
 
 export const useAuthorisation = (props: UseAuthorisationProps) => {
-  const { onSuccess, onError, onDrawer } = props;
+  const { onSuccess, onError, onDrawer, reference } = props;
   const { mutate, isError, isSuccess, reset, isPending } = useMutation({
     mutationFn: ({ payload }: AuthorizeCardPaymentRequest) =>
       postRequest<AuthorizeCardPaymentRequest["payload"], PaymentResponseData>({
-        url: "payments/authorise",
+        url: "payments/authorize",
         payload,
+        config: {
+          headers: {
+            Authorization: `Bearer ${reference}`,
+          },
+        },
       }),
     onSuccess: (data) => {
       onSuccess(data);
@@ -77,18 +90,24 @@ export const useAuthorisation = (props: UseAuthorisationProps) => {
 };
 
 type UseValidatePaymentProps = {
-  onSuccess(_val: unknown): void;
+  onSuccess(_val: PaymentResponseData): void;
   onError?: (_val: unknown) => void;
   onDrawer?: () => void;
+  reference: string;
 };
 
 export const useValidatePayment = (props: UseValidatePaymentProps) => {
-  const { onSuccess, onError, onDrawer } = props;
+  const { onSuccess, onError, onDrawer, reference } = props;
   const { mutate, isError, isSuccess, reset, isPending } = useMutation({
     mutationFn: ({ payload }: ValidateCardPaymentRequest) =>
       postRequest<ValidateCardPaymentRequest["payload"], PaymentResponseData>({
         url: "payments/validate",
         payload,
+        config: {
+          headers: {
+            Authorization: `Bearer ${reference}`,
+          },
+        },
       }),
     onSuccess: (data) => {
       onSuccess(data);
@@ -180,6 +199,36 @@ export const useVerifyPaymentTransfer = (
   return {
     payment: data,
     fetchingPayment: isFetching,
+    error,
+    isSuccess,
+    isError,
+    refetch,
+  };
+};
+
+type UseGetMerchantKeysProps = {
+  enabler?: boolean;
+};
+
+export const useGetMerchantKeys = (props: UseGetMerchantKeysProps) => {
+  const { enabler } = props;
+  const { data, isFetching, isError, isSuccess, error, refetch } = useQuery({
+    queryKey: ["useGetMerchantKeys"],
+    queryFn: () =>
+      getRequest<GetMerchantKeysResponse>({
+        url: "merchant-keys",
+        config: {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      }),
+    enabled: !!enabler,
+  });
+
+  return {
+    merchantKeys: data || [],
+    fetchingMerchantKeys: isFetching,
     error,
     isSuccess,
     isError,

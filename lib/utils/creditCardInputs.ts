@@ -1,4 +1,4 @@
-function clearNumber(value = ""): string {
+export function clearNumber(value = ""): string {
   return value.replace(/\D+/g, "");
 }
 
