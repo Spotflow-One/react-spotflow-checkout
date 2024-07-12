@@ -21,7 +21,7 @@ export function Popper(props: Props) {
             data-app-active={props.open}
             className={cn(
               "rounded-3xl fixed w-full h-screen top-0 lg:top-24 z-[3000] transition-transform duration-700 transform",
-              " data-[app-active=false]:-translate-y-full",
+              " data-[app-active=false]:translate-y-full",
             )}
           >
             <div className="grid gap-5">{props.children}</div>

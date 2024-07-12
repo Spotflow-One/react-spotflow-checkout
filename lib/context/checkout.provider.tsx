@@ -8,6 +8,7 @@ type StateType = {
 };
 type CheckoutStateType = {
   state?: StateType;
+  onOpenChange?: (_val: boolean) => void;
 };
 const CheckoutContext = React.createContext<CheckoutStateType>({});
 
@@ -31,10 +32,12 @@ export function CheckoutProvider(props: {
       },
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.data, open]);
+  }, [props.data, open, props.open]);
 
   return (
-    <CheckoutContext.Provider value={{ state }}>
+    <CheckoutContext.Provider
+      value={{ state, onOpenChange: props.onOpenChange || setOpen }}
+    >
       {typeof props.children === "function" ? (
         props.children(state)
       ) : (
@@ -45,10 +48,11 @@ export function CheckoutProvider(props: {
 }
 
 export const useCheckoutContext = () => {
-  const { state } = React.useContext(CheckoutContext);
+  const { state, onOpenChange } = React.useContext(CheckoutContext);
   if (!state) throw new Error("context is not available");
 
   return {
     state,
+    onOpenChange,
   };
 };

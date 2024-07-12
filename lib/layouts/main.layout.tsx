@@ -5,6 +5,7 @@ import PayWithUssdIcon from "@library/assets/pay-with-ussd-side-icon.svg?react";
 import PayWithTransferIcon from "@library/assets/pay-with-transfer-side-icon.svg?react";
 import CertifiedIcon from "@library/assets/pci-dss-certified.svg?react";
 import { Button } from "@library/components/button/button";
+import { useCheckoutContext } from "@library/context/checkout.provider";
 
 type Props = React.PropsWithChildren<{
   tab: string;
@@ -27,8 +28,8 @@ export function MainLayout(props: Props) {
   const Icon = IconObject[props.tab as unknown as keyof typeof IconObject];
   const Text = TextObject[props.tab as unknown as keyof typeof TextObject];
   return (
-    <div>
-      <div className=" grid min-h-[400px] grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[800px] mx-auto gap-4 ">
+    <div className=" ">
+      <div className="lg:shadow-lg grid min-h-[400px] grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[800px] mx-auto gap-4 ">
         <div>
           <Sidebar onClick={props.onChange} />{" "}
         </div>
@@ -58,17 +59,21 @@ export function MainLayout(props: Props) {
 }
 
 const TopContainer = () => {
+  const { state } = useCheckoutContext();
   return (
     <div className=" bg-[#01008E] py-12 px-3 md:py-7 md:px-8 grid gap-4 grid-rows-[51px_1fr] rounded-xl text-white">
       <div className=" flex gap-4 items-center justify-between border-b border-b-white text-white leading-8">
-        <p className=" text-sm whitespace-nowrap">Julesanums@gmail.com </p>
-        <p className=" text-sm">League Pass</p>
+        <p className=" text-sm whitespace-nowrap">{state.data?.email}</p>
+        <p className=" text-sm">{state?.data?.productName}</p>
       </div>
       <div className=" flex self-start items-center gap-4 justify-between">
         <h3 className=" flex items-center leading-10">USD 1 = NGN 1,483.98</h3>
         <div>
           <h3>
-            Pay <span className=" font-semibold">USD 14.99</span>
+            Pay{" "}
+            <span className=" font-semibold">
+              {state?.data?.currency} {state?.data?.amount}
+            </span>
           </h3>
           <span className=" inline-block bg-[#32BB78] text-xs whitespace-nowrap py-1 px-3 rounded-sm">
             NGN 22,244.86
