@@ -40,12 +40,12 @@ export function MainLayout(props: Props) {
   }, [merchantKeys]);
 
   return (
-    <div className=" ">
-      <div className="lg:shadow-lg grid min-h-[400px] grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[800px] mx-auto  ">
-        <div>
-          <Sidebar onClick={props.onChange} />{" "}
-        </div>
-        <main className=" h-full bg-white grid grid-rows-[auto_1fr] gap-4 px-3 md:px-6">
+    <div className=" min-h-[50dvh] ">
+      <div className="lg:shadow-lg rounded-lg bg-white grid min-h-[400px] h-full grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[800px] mx-auto  ">
+        <Sidebar onClick={props.onChange} />{" "}
+        {/* <div>
+        </div> */}
+        <main className=" h-full  grid grid-rows-[auto_1fr] gap-4 px-3 md:px-6 pt-6 pb-2">
           <div className=" flex lg:hidden gap-4 font-semibold text-[#3D3844]">
             <Icon className=" fill-[#9E9BA1]" /> {Text}
           </div>
