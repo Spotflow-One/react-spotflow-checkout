@@ -106,3 +106,13 @@ export type VerifyPaymentTransferProps = {
   enabler: boolean;
   interval: number;
 };
+
+export type GetMerchantKeysResponseData = {
+  id: number;
+  active: string;
+  key: string;
+  type: "secret" | "public" | "encryption";
+  mode: string;
+};
+
+export type GetMerchantKeysResponse = Array<GetMerchantKeysResponseData>;

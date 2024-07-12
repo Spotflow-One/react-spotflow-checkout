@@ -14,7 +14,7 @@ export function Popper(props: Props) {
             data-app-active={props.open}
             className={cn(
               " bg-black opacity-0 fixed top-0 z-10 hidden left-0 transition-opacity duration-200 h-screen w-full",
-              "data-[app-state=true]:opacity-30 data-[app-state=true]:block",
+              "data-[app-active=true]:opacity-30 data-[app-active=true]:block",
             )}
           />
           <div

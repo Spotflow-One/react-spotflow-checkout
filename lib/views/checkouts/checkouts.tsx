@@ -1,25 +1,35 @@
-import React from "react";
+// import React from "react";
 import { MainLayout } from "@library/layouts/main.layout";
 import { PayUssd } from "@library/views/pay-ussd/pay-ussd";
 import { PayTransfer } from "@library/views/pay-transfer/pay-transfer";
 import { PayCard } from "@library/views/pay-card/pay-card";
+import { useCheckoutContext } from "@library/context/checkout.provider";
 
 export function Checkouts() {
-  const [value, setValue] = React.useState("card");
+  const { state } = useCheckoutContext();
   return (
     <MainLayout
-      tab={value}
+      tab={state.paymentScreen}
       onChange={(values) => {
-        setValue(values);
+        state.onPaymentScreen(values as "card" | "ussd" | "transfer");
       }}
     >
-      <div data-state={value} className=" hidden data-[state=ussd]:grid">
+      <div
+        data-state={state.paymentScreen}
+        className="hidden data-[state=ussd]:grid"
+      >
         <PayUssd />
       </div>
-      <div data-state={value} className="hidden data-[state=transfer]:grid">
+      <div
+        data-state={state.paymentScreen}
+        className="hidden data-[state=transfer]:grid"
+      >
         <PayTransfer />
       </div>
-      <div data-state={value} className=" hidden data-[state=card]:grid">
+      <div
+        data-state={state.paymentScreen}
+        className="hidden data-[state=card]:grid"
+      >
         <PayCard />
       </div>
     </MainLayout>

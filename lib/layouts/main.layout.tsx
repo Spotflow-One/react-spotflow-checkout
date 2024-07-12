@@ -6,6 +6,7 @@ import PayWithTransferIcon from "@library/assets/pay-with-transfer-side-icon.svg
 import CertifiedIcon from "@library/assets/pci-dss-certified.svg?react";
 import { Button } from "@library/components/button/button";
 import { useCheckoutContext } from "@library/context/checkout.provider";
+import { useGetMerchantKeys } from "@library/hooks/queries/payments";
 
 type Props = React.PropsWithChildren<{
   tab: string;
@@ -27,9 +28,20 @@ const TextObject = {
 export function MainLayout(props: Props) {
   const Icon = IconObject[props.tab as unknown as keyof typeof IconObject];
   const Text = TextObject[props.tab as unknown as keyof typeof TextObject];
+  const { state } = useCheckoutContext();
+  const { merchantKeys } = useGetMerchantKeys({ enabler: !!state.open });
+
+  React.useEffect(() => {
+    if (merchantKeys && merchantKeys.length) {
+      state.onMerchantKeyChange(merchantKeys[0]?.key);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [merchantKeys]);
+
   return (
     <div className=" ">
-      <div className="lg:shadow-lg grid min-h-[400px] grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[800px] mx-auto gap-4 ">
+      <div className="lg:shadow-lg grid min-h-[400px] grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[800px] mx-auto  ">
         <div>
           <Sidebar onClick={props.onChange} />{" "}
         </div>

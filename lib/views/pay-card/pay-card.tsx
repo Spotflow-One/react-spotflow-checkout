@@ -6,46 +6,158 @@ import WarningIcon from "@library/assets/warning-icon.svg?react";
 import TransferSuccess from "@library/assets/transfer-success-icon.svg?react";
 import { cn } from "@library/utils/utils";
 import {
+  clearNumber,
   formatCreditCardNumber,
   formatCVC,
   formatExpirationDate,
+  unFormatCreditCardNumber,
 } from "@library/utils/creditCardInputs";
 import { cardValidator } from "./validator";
 import { useTimer } from "@library/hooks/use-timer";
+import {
+  useAuthorisation,
+  useCardPayment,
+  useValidatePayment,
+} from "@library/hooks/queries/payments";
+import { useCheckoutContext } from "@library/context/checkout.provider";
+import { generatePaymentReference } from "@library/utils/ref";
 
+type CardDetailType = {
+  card: string;
+  cvv: string;
+  expiry: string;
+};
 export function PayCard() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [screen, setScreen] = React.useState("detail");
+  const { state } = useCheckoutContext();
+  const [pageState, setPageState] = React.useState({
+    reference: "",
+    providerMessage: "",
+    screen: "detail",
+  });
+
+  const { makePayment, makingPayment } = useCardPayment({
+    onSuccess(_val) {
+      if (_val.status === "pending_authorization")
+        setPageState((prev) => ({
+          ...prev,
+          screen: "pin",
+          reference: _val.reference,
+        }));
+    },
+    reference: state.merchantKey,
+  });
+
+  const { validatePayment, validatingPayment } = useValidatePayment({
+    onSuccess(_val) {
+      if (_val.status === "successful") {
+        setPageState((prev) => ({
+          ...prev,
+          screen: "success",
+        }));
+      } else {
+        setPageState((prev) => ({
+          ...prev,
+          screen: "warning",
+        }));
+      }
+    },
+    reference: state.merchantKey,
+  });
+
+  const onValidate = (val: string) => {
+    validatePayment({
+      payload: {
+        authorization: {
+          otp: val,
+        },
+        reference: pageState.reference,
+      },
+    });
+  };
+
+  const { authorisePayment, authorisingPayment } = useAuthorisation({
+    onSuccess(_val) {
+      setPageState((prev) => ({
+        ...prev,
+        screen: "otp",
+        providerMessage:
+          _val?.providerMessage || "Enter the OTP sent to your phone",
+      }));
+    },
+    reference: state.merchantKey,
+  });
+
+  const onAuthorisation = (_val: string) => {
+    authorisePayment({
+      payload: {
+        authorization: {
+          pin: _val,
+        },
+        reference: pageState.reference,
+      },
+    });
+  };
+
+  const onCardPayment = (val: CardDetailType) => {
+    makePayment({
+      payload: {
+        amount: state.data.amount,
+        channel: "card",
+        currency: "USD",
+        customer: {
+          email: state.data.email,
+        },
+        reference: generatePaymentReference(),
+        card: {
+          pan: unFormatCreditCardNumber(val.card),
+          cvv: val.cvv,
+          expiryMonth: val.expiry.split("/")[0].trim(),
+          expiryYear: val.expiry.split("/")[1].trim(),
+        },
+      },
+    });
+  };
   return (
     <div className=" grid gap-3">
       <div
-        data-state={screen}
+        data-state={pageState.screen}
         className={cn(" hidden data-[state=detail]:block")}
       >
-        <BankDetailForm
-          onSubmit={() => {
-            setScreen("pin");
-          }}
-        />
-      </div>
-      <div data-state={screen} className={cn(" hidden data-[state=pin]:block")}>
-        <PinForm
-          onSubmit={() => {
-            setScreen("otp");
-          }}
-        />
-      </div>
-      <div data-state={screen} className={cn(" hidden data-[state=otp]:block")}>
-        <OtpForm onSubmit={() => {}} />
+        <BankDetailForm onSubmit={onCardPayment} loading={makingPayment} />
       </div>
       <div
-        data-state={screen}
+        data-state={pageState.screen}
+        className={cn(" hidden data-[state=pin]:block")}
+      >
+        <PinForm
+          onSubmit={(value) => {
+            if (value.length === 4) {
+              setTimeout(() => {
+                onAuthorisation(value);
+              }, 500);
+            }
+          }}
+          loading={authorisingPayment}
+        />
+      </div>
+      <div
+        data-state={pageState.screen}
+        className={cn(" hidden data-[state=otp]:block")}
+      >
+        <OtpForm
+          onSubmit={onValidate}
+          message={pageState.providerMessage}
+          loading={validatingPayment}
+        />
+      </div>
+      <div
+        data-state={pageState.screen}
         className={cn(" hidden data-[state=warning]:block")}
       >
         <WarningView />
       </div>
       <div
-        data-state={screen}
+        data-state={pageState.screen}
         className={cn(" hidden data-[state=success]:block")}
       >
         <SuccessView />
@@ -55,7 +167,8 @@ export function PayCard() {
 }
 
 type BankDetailFormProps = {
-  onSubmit(): void;
+  onSubmit(_val: CardDetailType): void;
+  loading?: boolean;
 };
 const BankDetailForm = (props: BankDetailFormProps) => {
   const [input, setInput] = React.useState({
@@ -96,7 +209,13 @@ const BankDetailForm = (props: BankDetailFormProps) => {
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          props.onSubmit();
+          if (input.validator) {
+            props.onSubmit({
+              card: input.card,
+              cvv: input.cvv,
+              expiry: input.expiry,
+            });
+          }
         }}
         className=" grid grid-cols-2 gap-4 gap-y-6"
       >
@@ -123,8 +242,9 @@ const BankDetailForm = (props: BankDetailFormProps) => {
         <Input
           label="CVV"
           name="cvv"
-          type="tel"
+          type="text"
           id="card-cvv"
+          inputMode="numeric"
           value={input.cvv}
           placeholder="123"
           onChange={handleInputChange}
@@ -142,59 +262,67 @@ const BankDetailForm = (props: BankDetailFormProps) => {
 };
 
 type PinFormProps = {
-  onSubmit(): void;
+  onSubmit(_val: string): void;
+  loading?: boolean;
 };
 const PinForm = (props: PinFormProps) => {
-  const [pin, setPin] = React.useState("");
   return (
     <div className=" grid gap-4">
       <p className=" text-center mx-auto text-sm text-[#55515B] max-w-[15rem]">
         Please enter your 4-digit card pin to authorize this payment
       </p>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (pin.length === 4) {
-            props.onSubmit();
-          }
-        }}
-        className=" grid gap-3"
-      >
+      <div className=" grid gap-3">
         <OtpInput
           FormDivContainer={{ className: " max-w-[400px] w-full mx-auto" }}
           inputType="tel"
-          value={pin}
           numInputs={4}
           onChange={(e) => {
-            setPin(e);
+            if (e.length === 4) props.onSubmit(e);
           }}
         />
         <button title="" type="submit">
           Cancel
         </button>
-      </form>
+      </div>
     </div>
   );
 };
 
 type OtpFormProps = {
-  onSubmit(): void;
+  onSubmit(_val: string): void;
+  loading?: boolean;
+  message?: string;
 };
 const OtpForm = (props: OtpFormProps) => {
   const { formatted } = useTimer(360);
+  const [otp, setOtp] = React.useState("");
   return (
     <div className=" grid gap-6">
       <p className=" mx-auto max-w-[15rem] text-center">
-        Kindly enter the OTP sent to 234249***3875
+        {props.message || " Kindly enter the OTP sent to 234249***3875"}
       </p>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          props.onSubmit();
+          if (props.loading) return;
+          if (otp.length < 4) return;
+          props.onSubmit(otp);
         }}
         className=" flex gap-4 justify-center "
       >
-        <Input label />
+        <Input
+          type="text"
+          inputMode="numeric"
+          required
+          name="otp"
+          max={6}
+          value={otp}
+          onChange={(e) => {
+            setOtp(clearNumber(e.target.value));
+          }}
+          pattern="\d*"
+          label
+        />
         <button
           type="submit"
           className="bg-[#32BB78] py-4 px-5 rounded-lg text-white"
@@ -218,6 +346,7 @@ const OtpForm = (props: OtpFormProps) => {
 };
 
 const WarningView = () => {
+  const { state } = useCheckoutContext();
   return (
     <div className=" grid gap-8">
       <div className=" max-w-[400px] w-full mx-auto">
@@ -227,10 +356,20 @@ const WarningView = () => {
         </h3>
       </div>
       <div className=" grid gap-4">
-        <Button className="border-[#C0B5CF] border bg-white text-[#55515B]">
+        <Button
+          onClick={() => {
+            state.onPaymentScreen("card");
+          }}
+          className="border-[#C0B5CF] border bg-white text-[#55515B]"
+        >
           Try again with your card
         </Button>
-        <Button className="border-[#C0B5CF] border bg-white text-[#55515B]">
+        <Button
+          onClick={() => {
+            state.onPaymentScreen("transfer");
+          }}
+          className="border-[#C0B5CF] border bg-white text-[#55515B]"
+        >
           Try again with transfer
         </Button>
         <Button className="border-[#C0B5CF] border bg-white text-[#55515B]">
