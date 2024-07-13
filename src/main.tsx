@@ -12,11 +12,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         data={{
           amount: 4000,
           currency: "NGN",
-          email: "olukayode@main.com",
+          email: "temi@mailinator.com",
           fullname: "kayode ogunnowo",
           phone: "09090909090",
           productId: "9e0808304344834034",
-          productName: "oijtojat",
+          productName: "Leagues Pass",
         }}
         actionText="Nornone"
       />
