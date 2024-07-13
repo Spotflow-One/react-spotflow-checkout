@@ -19,7 +19,7 @@ import { useDebounce } from "@library/hooks/use-debounce";
 
 export function PayTransfer() {
   const { state } = useCheckoutContext();
-  const timeout = 4800;
+  const timeout = 470;
   const [screen, setScreen] = React.useState("detail");
   const queryClient = useQueryClient();
   const [reference, setReference] = React.useState("");
@@ -80,6 +80,7 @@ export function PayTransfer() {
       >
         <TransferDetail
           onSubmit={() => {
+            // setScreen("wait");
             if (havePaid) return setScreen("wait");
             onPayment();
           }}
@@ -349,14 +350,24 @@ const WaitingView = (props: WaitingProps) => {
         We’re waiting to confirm your transfer. This can take a few minutes
       </h4>
       <div className=" grid grid-cols-[auto_1fr_auto] gap-3 items-center">
-        <DottedSpan text="Sent" /> <span>ff</span>
+        <DottedSpan text="Sent" />{" "}
+        <span
+          className={cn(
+            " relative block h-2 an rounded-xl -top-2 bg-[#E6E6E7] ",
+            "before:w-[50%] before:bg-green-700 before:rounded-xl before:animate-progress-linear before:h-full before:absolute before:left-0 before:top-0",
+          )}
+        ></span>
         <DottedSpan text="Received" />
       </div>
       <div className=" grid gap-3 items-center">
         <Button className="border-[#C0B5CF] border bg-white text-[#55515B]">
           Please wait for {props.formatted || ""}
         </Button>
-        <button type="button" className=" w-full text-center text-[#55515B]">
+        <button
+          onClick={props.onShow}
+          type="button"
+          className=" w-full text-center text-[#55515B]"
+        >
           Show account number
         </button>
       </div>
@@ -388,9 +399,9 @@ const SuccessView = () => {
 
 const DottedSpan = ({ text }: { text: string }) => {
   return (
-    <span className="block">
+    <span className="flex flex-col justify-center">
       <span className=" border border-dashed rounded-full block h-9 w-9 border-[#B6B4B9]"></span>
-      <span className=" text-sm text-[#9E9BA1]">{text}</span>
+      <span className=" text-sm text-[#9E9BA1] text-center">{text}</span>
     </span>
   );
 };

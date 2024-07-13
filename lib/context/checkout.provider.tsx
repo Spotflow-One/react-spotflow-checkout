@@ -44,6 +44,7 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
         } else {
           setOpen(value);
         }
+        if (!value) onPaymentScreen("card");
       },
       paymentScreen,
       onPaymentScreen,
@@ -52,6 +53,7 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
         setMerchantKey(_val); //
       },
     };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.data, open, props.open, paymentScreen]);
 
