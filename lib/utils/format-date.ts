@@ -47,7 +47,10 @@ export function formatTimeString(seconds: number) {
   return formattedTime;
 }
 
-export function getTimeformatWithMomentAppend(time: number): string {
+export function getTimeformatWithMomentAppend(
+  time: number,
+  isMoment?: boolean,
+): string {
   // Calculate hours, minutes, and seconds
   const hrs = Math.floor(time / 3600);
   const mins = Math.floor((time % 3600) / 60);
@@ -58,7 +61,7 @@ export function getTimeformatWithMomentAppend(time: number): string {
     return "seconds";
   };
   // Format the string
-  const formattedTime = `${hrs > 0 ? hrs + ": " : ""}${mins > 0 ? mins + ": " : ""}${secs} ${getMoment()}`;
+  const formattedTime = `${hrs > 0 ? hrs + ":" : ""}${mins > 0 ? mins + ":" : ""}${secs} ${isMoment ? getMoment() : ""}`;
 
   return formattedTime;
 }

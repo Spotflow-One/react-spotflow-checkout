@@ -132,18 +132,24 @@ export const useValidatePayment = (props: UseValidatePaymentProps) => {
 };
 
 type UsePaymentTransferProps = {
-  onSuccess(_val: unknown): void;
+  onSuccess(_val: PaymentResponseData): void;
   onError?: (_val: unknown) => void;
   onDrawer?: () => void;
+  reference: string;
 };
 
 export const usePaymentTransfer = (props: UsePaymentTransferProps) => {
-  const { onSuccess, onError, onDrawer } = props;
+  const { onSuccess, onError, onDrawer, reference } = props;
   const { mutate, isError, isSuccess, reset, isPending } = useMutation({
     mutationFn: ({ payload }: TransferPaymentRequest) =>
       postRequest<TransferPaymentRequest["payload"], PaymentResponseData>({
         url: "payments",
         payload,
+        config: {
+          headers: {
+            Authorization: `Bearer ${reference}`,
+          },
+        },
       }),
     onSuccess: (data) => {
       onSuccess(data);
@@ -181,7 +187,7 @@ export const useVerifyPaymentTransfer = (
 ) => {
   const { reference, isPollingEnabled, enabler, interval, merchantKey } = props;
   const { data, isFetching, isError, isSuccess, error, refetch } = useQuery({
-    queryKey: ["verifyPaymentTransfer"],
+    queryKey: ["useVerifyPaymentTransfer"],
     queryFn: () =>
       getRequest<PaymentResponseData>({
         url: `payments/verify?reference=${reference}`,
