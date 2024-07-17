@@ -75,7 +75,7 @@ export function MainLayout(props: Props) {
                 onClick={() => {
                   state.onOpenChange(false);
                 }}
-                className="border-[#E6E6E7]  w-auto  text-xs px-1 border-[0.5px] lg:flex-1 items-center bg-white text-[#55515B]"
+                className="border-[#E6E6E7]  w-auto  text-xs px-2 border-[0.5px] lg:flex-1 items-center bg-white text-[#55515B]"
               >
                 x Cancel Payment
               </Button>
