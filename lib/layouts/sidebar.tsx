@@ -41,7 +41,7 @@ type SidebarLinkProps = {
   data: SidebarDataLink;
   onClick(): void;
 };
-const SidebarLink = (props: SidebarLinkProps) => {
+export const SidebarLink = (props: SidebarLinkProps) => {
   return (
     <button
       type="button"
@@ -65,7 +65,7 @@ const SidebarLink = (props: SidebarLinkProps) => {
   );
 };
 
-const sidebarDataLinkList = [
+export const sidebarDataLinkList = [
   {
     label: "Pay with Card",
     value: "card",

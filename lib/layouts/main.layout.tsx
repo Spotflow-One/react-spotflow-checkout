@@ -7,6 +7,7 @@ import CertifiedIcon from "@library/assets/pci-dss-certified.svg?react";
 import { Button } from "@library/components/button/button";
 import { useCheckoutContext } from "@library/context/checkout.provider";
 import { useGetMerchantKeys } from "@library/hooks/queries/payments";
+import { cn } from "@library/utils/utils";
 
 type Props = React.PropsWithChildren<{
   tab: string;
@@ -17,12 +18,14 @@ const IconObject = {
   card: PayWithCardIcon,
   ussd: PayWithUssdIcon,
   transfer: PayWithTransferIcon,
+  options: PayWithCardIcon,
 };
 
 const TextObject = {
   card: "Pay with Card",
   ussd: "Pay with USSD",
   transfer: "Pay with Transfer",
+  options: "Pay with Options",
 };
 
 export function MainLayout(props: Props) {
@@ -40,23 +43,40 @@ export function MainLayout(props: Props) {
   }, [merchantKeys]);
 
   return (
-    <div className=" min-h-[50dvh] ">
+    <div className=" relative min-h-[50dvh] ">
       <div className="lg:shadow-lg rounded-lg bg-white grid min-h-[400px] h-full grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[800px] mx-auto  ">
         <Sidebar onClick={props.onChange} />{" "}
-        {/* <div>
-        </div> */}
-        <main className=" h-full  grid grid-rows-[auto_1fr] gap-4 px-3 md:px-6 pt-6 pb-2">
-          <div className=" flex lg:hidden gap-4 font-semibold text-[#3D3844]">
-            <Icon className=" fill-[#9E9BA1]" /> {Text}
-          </div>
+        <main className=" h-full  grid grid-rows-[auto_1fr] gap-4 px-3 md:px-6 pt-6 pb-2 overflow-y-auto max-h-[calc(100dvh_-_80px)] lg:max-h-[calc(100%_-_40px)]">
+          {state.paymentScreen !== "options" && (
+            <div className=" flex lg:hidden gap-4  top-0 font-semibold text-[#3D3844]">
+              <Icon className=" fill-[#9E9BA1]" /> {Text}
+            </div>
+          )}
           <TopContainer />
           <div>{props.children}</div>
           <div className=" grid grid-rows-[repeat(2,_auto)] gap-4">
-            <div className=" flex lg:hidden justify-between gap-4">
-              <Button className="border-[#E6E6E7] border-[0.5px]flex-1 whitespace-nowrap py-1 items-center bg-white text-[#55515B]">
-                x Change Payment Method
-              </Button>
-              <Button className="border-[#E6E6E7] border-[0.5px] flex-1 items-center bg-white text-[#55515B]">
+            <div
+              className={cn(
+                " flex lg:hidden justify-between gap-4",
+                state.paymentScreen === "options" && "justify-center",
+              )}
+            >
+              {state.paymentScreen !== "options" && (
+                <Button
+                  onClick={() => {
+                    state.onPaymentScreen("options");
+                  }}
+                  className="border-[#E6E6E7] px-1 border-[0.5px] flex-1 text-xs whitespace-nowrap py-1 items-center bg-white text-[#55515B]"
+                >
+                  x Change Payment Method
+                </Button>
+              )}
+              <Button
+                onClick={() => {
+                  state.onOpenChange(false);
+                }}
+                className="border-[#E6E6E7]  w-auto  text-xs px-1 border-[0.5px] lg:flex-1 items-center bg-white text-[#55515B]"
+              >
                 x Cancel Payment
               </Button>
             </div>

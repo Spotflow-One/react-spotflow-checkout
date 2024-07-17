@@ -1,12 +1,14 @@
 import { CheckoutData } from "@library/types";
 import React from "react";
 
+type ScreenType = "card" | "ussd" | "transfer" | "options";
+
 type StateType = {
   data: CheckoutData;
   open: boolean;
   onOpenChange(_val: boolean): void;
-  paymentScreen: "card" | "ussd" | "transfer";
-  onPaymentScreen(_val: "card" | "ussd" | "transfer"): void;
+  paymentScreen: ScreenType;
+  onPaymentScreen(_val: ScreenType): void;
   merchantKey: string;
   onMerchantKeyChange(_val: string): void;
 };
@@ -28,10 +30,9 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
     "sk_test_f998479c0ee241a795270a55aa8dab27",
   );
 
-  const [paymentScreen, setPaymentScreen] = React.useState<
-    "card" | "ussd" | "transfer"
-  >("card");
-  const onPaymentScreen = (values: "card" | "ussd" | "transfer") => {
+  const [paymentScreen, setPaymentScreen] =
+    React.useState<ScreenType>("options");
+  const onPaymentScreen = (values: ScreenType) => {
     setPaymentScreen(values);
   };
   const state: StateType = React.useMemo(() => {
