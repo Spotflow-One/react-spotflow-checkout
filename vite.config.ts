@@ -37,12 +37,15 @@ export default defineConfig({
         }),
       ],
       output: {
-        // manualChunks(id) {
-        //   const fileId = id.toString().split("/");
-        //   if (id.includes(".svg?react")) {
-        //     return fileId[fileId.length - 1].split("?react")[0].toString();
-        //   }
-        // },
+        manualChunks(id) {
+          if (id.includes(".svg?react")) {
+            return id
+              .toString()
+              .split("/")
+              [id.toString().split("/").length - 1].split("?react")[0]
+              .toString();
+          }
+        },
         assetFileNames: "assets/[name][extname]",
         entryFileNames: "[name].js",
       },

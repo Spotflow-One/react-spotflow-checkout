@@ -1,20 +1,26 @@
 {
-  "name": "react-spotflow-checkout",
+  "name": "@spot-flow/react-spotflow-checkout",
   "version": "0.1.01",
   "type": "module",
   "main": "dist/main.js",
-  "types": "dist/main.d.ts",
+  "types": "dist/lib/main.d.ts",
+  "source": "lib/main.ts",
   "files": [
     "dist"
   ],
   "sideEffects": [
     "**/*.css"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Spotflow-One/react-spotflow-checkout"
+  },
   "scripts": {
     "dev": "vite",
     "clean": "rimraf dist",
-    "build": "yarn build:modern",
+    "build": "tsc --p ./tsconfig-build.json && vite build",
     "build:vite:lib": "tsc --p ./tsconfig-build.json && vite build",
+    "build:rollup:lib": "yarn build:modern",
     "build:watch": "yarn build:modern -w",
     "lint": "eslint . --ext ts,tsx,js --report-unused-disable-directives --max-warnings 0",
     "build:modern": "rollup --bundleConfigAsCjs -c ./scripts/rollup/rollup.config.js",
@@ -30,10 +36,8 @@
     "prepublishOnly": "yarn install && yarn lint:fix && yarn type && yarn build"
   },
   "peerDependencies": {
-    "clsx": "^2.1.1",
     "react": "^16.8.0 || ^17 || ^18",
-    "react-dom": "^16.8.5 || ^17.0.0 || ^18.0.0",
-    "tailwind-merge": "^2.3.0"
+    "react-dom": "^16.8.5 || ^17.0.0 || ^18.0.0"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.51.1",
@@ -88,5 +92,7 @@
     "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4"
   },
+  "author": "Kayode Ogunnowo <olukayodeogunnowo@gmail.com>",
+  "license": "MIT",
   "packageManager": "yarn@4.3.1+sha512.af78262d7d125afbfeed740602ace8c5e4405cd7f4735c08feb327286b2fdb2390fbca01589bfd1f50b1240548b74806767f5a063c94b67e431aabd0d86f7774"
 }

@@ -13,7 +13,7 @@ export const useTimer = (timer: number, start?: boolean) => {
     }, 1000);
 
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [seconds, start]);
 
   return { seconds, formatted: getTimeformatWithMomentAppend(seconds, true) };

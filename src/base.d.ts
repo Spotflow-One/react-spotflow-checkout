@@ -1,5 +1,5 @@
 /// <reference types="vite-plugin-svgr/client" />
-/* eslint-disable no-unused-vars */
+ 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as React from "react";
 declare module "react" {
