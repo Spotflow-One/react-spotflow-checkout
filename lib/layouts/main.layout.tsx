@@ -25,7 +25,7 @@ const TextObject = {
   card: "Pay with Card",
   ussd: "Pay with USSD",
   transfer: "Pay with Transfer",
-  options: "Pay with Options",
+  options: "",
 };
 
 export function MainLayout(props: Props) {
