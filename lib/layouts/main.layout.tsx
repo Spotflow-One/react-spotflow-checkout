@@ -66,7 +66,7 @@ export function MainLayout(props: Props) {
                   onClick={() => {
                     state.onPaymentScreen("options");
                   }}
-                  className="border-[#E6E6E7] px-1 border-[0.5px] flex-1 text-xs whitespace-nowrap py-1 items-center bg-white text-[#55515B]"
+                  className="border-[#E6E6E7] px-1 border-[0.5px] w-auto lg:flex-1 text-xs whitespace-nowrap py-1 items-center bg-white text-[#55515B]"
                 >
                   x Change Payment Method
                 </Button>

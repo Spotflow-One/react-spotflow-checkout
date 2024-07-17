@@ -40,6 +40,7 @@
     "axios": "^1.7.2",
     "clsx": "^2.1.1",
     "react-otp-input": "^3.1.1",
+    "react-select": "^5.8.0",
     "tailwind-merge": "^2.3.0",
     "uuid": "^10.0.0"
   },

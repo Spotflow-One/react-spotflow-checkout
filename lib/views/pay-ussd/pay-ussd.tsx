@@ -1,8 +1,8 @@
 import React from "react";
 import HashIcon from "@library/assets/hash-icon.svg?react";
-import { Select } from "@library/components/input/select";
 import { Button } from "@library/components/button/button";
 import { cn } from "@library/utils/utils";
+import Select, { DropdownIndicatorProps, components } from "react-select";
 
 export function PayUssd() {
   const [screen, setScreen] = React.useState("bank");
@@ -68,18 +68,27 @@ const ChooseBankForm = (props: ChooseBankFormProps) => {
         }, 500);
       }}
     >
-      <Select
+      <ControlledSelect
         options={bankList}
         value={state?.bank}
         name="bank"
-        endAdornment={
-          <span className=" rounded-sm bg-[#CCCCE8] font-semibold text-[#6D6A73] p-1">
-            *323#
-          </span>
-        }
-        onChange={(e) => {
-          setState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+        onChange={(values) => {
+          setState((prev) => ({
+            ...prev,
+            bank: values,
+          }));
         }}
+        // endAdornment={
+        //   <span className=" rounded-sm bg-[#CCCCE8] font-semibold text-[#6D6A73] p-1">
+        //     *323#
+        //   </span>
+        // }
+        // onChange={(e) => {
+        //   setState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+        // }}
+        // onChange={(e) => {
+        //   setState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+        // }}
       />
     </form>
   );
@@ -111,6 +120,54 @@ const CodeForm = (props: CodeFormProps) => {
       >
         Click to copy
       </button>
+    </div>
+  );
+};
+
+export interface ColourOption {
+  readonly value: string;
+  readonly label: string;
+  readonly color: string;
+  readonly isFixed?: boolean;
+  readonly isDisabled?: boolean;
+}
+
+const DropdownIndicator = (
+  props: DropdownIndicatorProps<ColourOption, true>,
+) => {
+  return (
+    <components.DropdownIndicator {...props}>
+      <span className=" rounded-sm bg-[#CCCCE8] font-semibold text-[#6D6A73] p-1">
+        *323#
+      </span>
+    </components.DropdownIndicator>
+  );
+};
+
+type ControlledSelectProps = {
+  options: Array<{ label: string; value: string }>;
+  value: string;
+  onChange: (_val: string) => void;
+  name?: string;
+};
+const ControlledSelect = (props: ControlledSelectProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+  // const [value] = React.useState<any>(null);
+  return (
+    <div>
+      <Select
+        // value={value}
+        components={{ DropdownIndicator }}
+        options={props.options.map((field) => ({
+          color: "#00B8D9",
+          ...field,
+        }))}
+        // onChange={(_val) => {
+        //   props.onChange(_val[0].value);
+        //   setValue(_val);
+        // }}
+        name={props.name}
+      />
     </div>
   );
 };
