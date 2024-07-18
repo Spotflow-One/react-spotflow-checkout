@@ -7,16 +7,11 @@ import dts from "vite-plugin-dts";
 import svgr from "vite-plugin-svgr";
 import { peerDependencies } from "./package.json";
 import alias from "@rollup/plugin-alias";
-// import { libInjectCss } from 'vite-plugin-lib-inject-css'
+import { libInjectCss } from "vite-plugin-lib-inject-css";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    svgr(),
-    // libInjectCss(),
-    dts({ include: ["lib"] }),
-  ],
+  plugins: [react(), svgr(), libInjectCss(), dts({ include: ["lib"] })],
   resolve: {
     alias: {
       "@library": resolve(__dirname, "lib"),
@@ -29,6 +24,7 @@ export default defineConfig({
       formats: ["es"],
     },
     rollupOptions: {
+      external: Object.keys(peerDependencies),
       plugins: [
         alias({
           entries: [
@@ -48,6 +44,10 @@ export default defineConfig({
         },
         assetFileNames: "assets/[name][extname]",
         entryFileNames: "[name].js",
+        globals: {
+          react: "React",
+          "react-dom": "ReactDOM",
+        },
       },
     },
     // rollupOptions: {

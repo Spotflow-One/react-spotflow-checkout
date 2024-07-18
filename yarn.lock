@@ -22,6 +22,95 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ast-grep/napi-darwin-arm64@npm:0.22.6":
+  version: 0.22.6
+  resolution: "@ast-grep/napi-darwin-arm64@npm:0.22.6"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@ast-grep/napi-darwin-x64@npm:0.22.6":
+  version: 0.22.6
+  resolution: "@ast-grep/napi-darwin-x64@npm:0.22.6"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@ast-grep/napi-linux-arm64-gnu@npm:0.22.6":
+  version: 0.22.6
+  resolution: "@ast-grep/napi-linux-arm64-gnu@npm:0.22.6"
+  conditions: os=linux & cpu=arm64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@ast-grep/napi-linux-x64-gnu@npm:0.22.6":
+  version: 0.22.6
+  resolution: "@ast-grep/napi-linux-x64-gnu@npm:0.22.6"
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@ast-grep/napi-linux-x64-musl@npm:0.22.6":
+  version: 0.22.6
+  resolution: "@ast-grep/napi-linux-x64-musl@npm:0.22.6"
+  conditions: os=linux & cpu=x64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@ast-grep/napi-win32-arm64-msvc@npm:0.22.6":
+  version: 0.22.6
+  resolution: "@ast-grep/napi-win32-arm64-msvc@npm:0.22.6"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@ast-grep/napi-win32-ia32-msvc@npm:0.22.6":
+  version: 0.22.6
+  resolution: "@ast-grep/napi-win32-ia32-msvc@npm:0.22.6"
+  conditions: os=win32 & cpu=ia32
+  languageName: node
+  linkType: hard
+
+"@ast-grep/napi-win32-x64-msvc@npm:0.22.6":
+  version: 0.22.6
+  resolution: "@ast-grep/napi-win32-x64-msvc@npm:0.22.6"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@ast-grep/napi@npm:^0.22.3":
+  version: 0.22.6
+  resolution: "@ast-grep/napi@npm:0.22.6"
+  dependencies:
+    "@ast-grep/napi-darwin-arm64": "npm:0.22.6"
+    "@ast-grep/napi-darwin-x64": "npm:0.22.6"
+    "@ast-grep/napi-linux-arm64-gnu": "npm:0.22.6"
+    "@ast-grep/napi-linux-x64-gnu": "npm:0.22.6"
+    "@ast-grep/napi-linux-x64-musl": "npm:0.22.6"
+    "@ast-grep/napi-win32-arm64-msvc": "npm:0.22.6"
+    "@ast-grep/napi-win32-ia32-msvc": "npm:0.22.6"
+    "@ast-grep/napi-win32-x64-msvc": "npm:0.22.6"
+  dependenciesMeta:
+    "@ast-grep/napi-darwin-arm64":
+      optional: true
+    "@ast-grep/napi-darwin-x64":
+      optional: true
+    "@ast-grep/napi-linux-arm64-gnu":
+      optional: true
+    "@ast-grep/napi-linux-x64-gnu":
+      optional: true
+    "@ast-grep/napi-linux-x64-musl":
+      optional: true
+    "@ast-grep/napi-win32-arm64-msvc":
+      optional: true
+    "@ast-grep/napi-win32-ia32-msvc":
+      optional: true
+    "@ast-grep/napi-win32-x64-msvc":
+      optional: true
+  checksum: 10c0/11670fc968db3a8634a0c13f80a94ce49b59f295460bca39c7eae0345376bab0a2ff5273a93e8d90164face51a7d682aadabf131f0523db9c38a75740cdbf027
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.24.7":
   version: 7.24.7
   resolution: "@babel/code-frame@npm:7.24.7"
@@ -1364,6 +1453,7 @@ __metadata:
     uuid: "npm:^10.0.0"
     vite: "npm:^5.3.1"
     vite-plugin-dts: "npm:^3.9.1"
+    vite-plugin-lib-inject-css: "npm:^2.1.1"
     vite-plugin-svgr: "npm:^4.2.0"
     vite-tsconfig-paths: "npm:^4.3.2"
     webpack: "npm:^5.92.1"
@@ -4812,7 +4902,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"magic-string@npm:^0.30.3, magic-string@npm:^0.30.8":
+"magic-string@npm:^0.30.10, magic-string@npm:^0.30.3, magic-string@npm:^0.30.8":
   version: 0.30.10
   resolution: "magic-string@npm:0.30.10"
   dependencies:
@@ -7297,6 +7387,19 @@ __metadata:
     vite:
       optional: true
   checksum: 10c0/a38e02f2383df9db4b0b35bece0c2f96fc3f4bf695dd6cf717caadb4be457c1fdb4a87ed77b61a7beec494c730ea4c0656c9f968ecefbe42435f765c3b887996
+  languageName: node
+  linkType: hard
+
+"vite-plugin-lib-inject-css@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "vite-plugin-lib-inject-css@npm:2.1.1"
+  dependencies:
+    "@ast-grep/napi": "npm:^0.22.3"
+    magic-string: "npm:^0.30.10"
+    picocolors: "npm:^1.0.0"
+  peerDependencies:
+    vite: "*"
+  checksum: 10c0/4fb60e83db5973a7b9c462190140ee517364e6ba8d4467fd597c85a2dd6904ae9e3d6103342b54119c626deff91fc213f1e466df0430fcacff32973381468b11
   languageName: node
   linkType: hard
 

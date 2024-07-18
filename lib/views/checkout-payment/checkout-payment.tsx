@@ -16,17 +16,19 @@ const queryClient = new QueryClient({
 });
 
 export function CheckoutPayment(props: CheckoutPaymentProps) {
+  const { data, actionText, ...rest } = props;
   return (
-    <CheckoutProvider data={props.data}>
+    <CheckoutProvider data={data}>
       {(values) => (
         <React.Fragment>
           <button
+            {...rest}
             type="button"
             onClick={() => {
               values.onOpenChange(true);
             }}
           >
-            {props.actionText || "Pay Amount"}
+            {actionText || "Pay Amount"}
           </button>
           <Popper open={values.open}>
             <QueryClientProvider client={queryClient}>

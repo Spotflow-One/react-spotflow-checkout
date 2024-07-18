@@ -1,6 +1,16 @@
-import { CheckoutData } from "@/checkout-types";
+import React from "react";
 
-export type CheckoutPaymentProps = {
+export declare type CheckoutData = {
+  productId: string;
+  productName: string;
+  fullname: string;
+  email: string;
+  phone: string;
+  amount: number;
+  currency: "USD" | "EUR" | "NGN" | "GBP";
+};
+
+export type CheckoutPaymentProps = React.ComponentProps<"button"> & {
   data: CheckoutData;
   actionText: string;
 };
