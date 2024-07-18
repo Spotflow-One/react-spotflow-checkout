@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
   },
 });
 
-export function CheckoutPayment(props: CheckoutPaymentProps) {
+export function PaymentCheckoutButton(props: CheckoutPaymentProps) {
   const { data, actionText, ...rest } = props;
   return (
     <CheckoutProvider data={data}>

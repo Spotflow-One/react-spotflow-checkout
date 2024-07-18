@@ -73,4 +73,5 @@ export default defineConfig({
     //   },
     // },
   },
+  assetsInclude: ["**/*.otf", "**/*.woff", "**/*.woff2"],
 });

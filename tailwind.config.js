@@ -3,7 +3,7 @@
 export default {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{ts,tsx}", "./lib/**/*.{ts,tsx}"],
-  prefix: "",
+  // prefix: "rspc-",
   theme: {
     extend: {
       keyframes: {

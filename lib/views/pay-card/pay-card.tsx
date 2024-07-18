@@ -381,6 +381,7 @@ const WarningView = () => {
 };
 
 const SuccessView = () => {
+  const { state } = useCheckoutContext();
   return (
     <div className=" grid gap-[50px] max-w-[300px] w-full mx-auto">
       <div className=" flex flex-col items-center gap-6">
@@ -389,7 +390,12 @@ const SuccessView = () => {
           Token generation/authorization successful
         </p>
       </div>
-      <Button className="border-[#C0B5CF] border bg-white text-[#55515B]">
+      <Button
+        className="border-[#C0B5CF] border bg-white text-[#55515B]"
+        onClick={() => {
+          state.onOpenChange(false);
+        }}
+      >
         Close
       </Button>
     </div>

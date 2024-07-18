@@ -257,6 +257,7 @@ const TimerCard = (props: TimerCardProps) => {
 };
 
 const AccountExpiry = () => {
+  const { state } = useCheckoutContext();
   return (
     <div className=" grid gap-12">
       <div className=" grid place-items-center">
@@ -264,7 +265,12 @@ const AccountExpiry = () => {
         <p className=" text-[#55515B]">Account expired</p>
       </div>
       <div className=" grid gap-3">
-        <Button className=" border border-[#C0B5CF] bg-white text-[#55515B]">
+        <Button
+          className=" border border-[#C0B5CF] bg-white text-[#55515B]"
+          onClick={() => {
+            state.onPaymentScreen("transfer");
+          }}
+        >
           Try again
         </Button>
         <Button className=" border border-[#C0B5CF] bg-white text-[#55515B]">

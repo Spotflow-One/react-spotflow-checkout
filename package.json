@@ -1,6 +1,6 @@
 {
   "name": "@spot-flow/react-spotflow-checkout",
-  "version": "0.1.06",
+  "version": "0.1.7",
   "type": "module",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -18,7 +18,7 @@
   "scripts": {
     "dev": "vite",
     "clean": "rimraf dist",
-    "build": "tsc --p ./tsconfig-build.json && vite build",
+    "build": "yarn clean && tsc --p ./tsconfig-build.json && vite build",
     "build:vite:lib": "tsc --p ./tsconfig-build.json && vite build",
     "build:rollup:lib": "yarn build:modern",
     "build:watch": "yarn build:modern -w",
