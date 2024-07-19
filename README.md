@@ -31,12 +31,9 @@ This library can be implemented using the following
 ### 1. Using the Payment CheckoutButton
 
 ```javascript
-import "./index.css";
-export * from "./checkout-types";
-import { PaymentCheckoutButton } from "@library/main";
+import { PaymentCheckoutButton } from "@spot-flow/react-spotflow-checkout";
 import React from "react";
 import ReactDOM from "react-dom/client";
-// import React from "react";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -50,7 +47,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           phone: "09090909090",
           productId: "9e0808304344834034",
           productName: "Leagues Pass",
-          merchantKey: "<This is your Merchant Key generated for you Merchant on Spotflow> <sk_test_f998479c0eedhXXXXXXXXXXXXXXXX>"
+          merchantKey: "<sk_test_f998479c0eedhXXXXXXXXXXXXXXXX>"// <This is your Merchant Key generated for you Merchant on Spotflow> 
         }}
         actionText="Pay Money"
       />
