@@ -4,7 +4,7 @@ this is a React SDK Library for the Spotflow Payment Checkout
 
 ## DEMO
 
-<img src="https://github.com/Spotflow-One/react-spotflow-checkout/blob/main/Spoflow_Demo.png?raw=true" />
+<img src="https://github.com/Spotflow-One/react-spotflow-checkout/blob/main/Spotflow_image.png?raw=true" />
 
 ## Getting Started
 
