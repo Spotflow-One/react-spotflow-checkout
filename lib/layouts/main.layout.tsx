@@ -3,10 +3,10 @@ import Sidebar from "./sidebar";
 import PayWithCardIcon from "@library/assets/pay-with-card-side-icon.svg?react";
 import PayWithUssdIcon from "@library/assets/pay-with-ussd-side-icon.svg?react";
 import PayWithTransferIcon from "@library/assets/pay-with-transfer-side-icon.svg?react";
+import ErrorIcon from "@library/assets/error-notify-icon.svg?react";
 import CertifiedIcon from "@library/assets/pci-dss-certified.svg?react";
 import { Button } from "@library/components/button/button";
 import { useCheckoutContext } from "@library/context/checkout.provider";
-import { useGetMerchantKeys } from "@library/hooks/queries/payments";
 import { cn } from "@library/utils/utils";
 
 type Props = React.PropsWithChildren<{
@@ -32,15 +32,6 @@ export function MainLayout(props: Props) {
   const Icon = IconObject[props.tab as unknown as keyof typeof IconObject];
   const Text = TextObject[props.tab as unknown as keyof typeof TextObject];
   const { state } = useCheckoutContext();
-  const { merchantKeys } = useGetMerchantKeys({ enabler: !!state.open });
-
-  React.useEffect(() => {
-    if (merchantKeys && merchantKeys.length) {
-      state.onMerchantKeyChange(merchantKeys[0]?.key);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [merchantKeys]);
 
   return (
     <div className=" relative min-h-[50dvh] ">
@@ -53,7 +44,15 @@ export function MainLayout(props: Props) {
             </div>
           )}
           <TopContainer />
-          <div>{props.children}</div>
+          <div>
+            {state.errorText && (
+              <p className=" bg-red-500 text-center p-1 rounded-lg px-2 text-white">
+                <ErrorIcon className=" inline mr-3 align-middle" />{" "}
+                {state?.errorText || ""}{" "}
+              </p>
+            )}
+            {props.children}
+          </div>
           <div className=" grid grid-rows-[repeat(2,_auto)] gap-4">
             <div
               className={cn(

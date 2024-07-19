@@ -11,6 +11,8 @@ type StateType = {
   onPaymentScreen(_val: ScreenType): void;
   merchantKey: string;
   onMerchantKeyChange(_val: string): void;
+  errorText?: string;
+  onErrorText?: (_val: string) => void;
 };
 type CheckoutStateType = {
   state?: StateType;
@@ -26,12 +28,12 @@ type CheckoutProviderProps = {
 };
 export function CheckoutProvider(props: CheckoutProviderProps) {
   const [open, setOpen] = React.useState(false);
+  const [errorText, setErrorText] = React.useState<string | undefined>("");
   const [merchantKey, setMerchantKey] = React.useState(
-    "sk_test_f998479c0ee241a795270a55aa8dab27",
+    props.data.merchantKey || "sk_test_f998479c0ee241a795270a55aa8dab27",
   );
 
-  const [paymentScreen, setPaymentScreen] =
-    React.useState<ScreenType>("options");
+  const [paymentScreen, setPaymentScreen] = React.useState<ScreenType>("card");
   const onPaymentScreen = (values: ScreenType) => {
     setPaymentScreen(values);
   };
@@ -53,10 +55,14 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
       onMerchantKeyChange(_val) {
         setMerchantKey(_val); //
       },
+      errorText,
+      onErrorText(_val) {
+        setErrorText(_val); //
+      },
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.data, open, props.open, paymentScreen]);
+  }, [props.data, open, props.open, paymentScreen, errorText]);
 
   return (
     <CheckoutContext.Provider

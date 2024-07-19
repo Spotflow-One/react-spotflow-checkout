@@ -19,4 +19,5 @@ export declare type CheckoutData = {
   phone: string;
   amount: number;
   currency: "USD" | "EUR" | "NGN" | "GBP";
+  merchantKey?: string;
 };
