@@ -137,7 +137,7 @@ const TransferDetail = (props: TransferDetailProps) => {
     let timer: string | number | NodeJS.Timeout | undefined;
 
     if (state.paymentScreen === "transfer") {
-      // eslint-disable-next-line no-var
+       
       timer = setInterval(() => {
         setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
       }, 1000);
