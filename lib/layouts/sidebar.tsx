@@ -5,6 +5,7 @@ import PayWithCardIcon from "@library/assets/pay-with-card-side-icon.svg?react";
 import PayWithUssdIcon from "@library/assets/pay-with-ussd-side-icon.svg?react";
 import PayWithTransferIcon from "@library/assets/pay-with-transfer-side-icon.svg?react";
 import { cn } from "@library/utils/utils";
+import { useCheckoutContext } from "@library/context/checkout.provider";
 
 type Props = {
   onClick(_val: string): void;
@@ -12,6 +13,7 @@ type Props = {
 
 export default function Sidebar(props: Props) {
   const [value, setValue] = useState(sidebarDataLinkList[0].value);
+  const { state } = useCheckoutContext();
   return (
     <aside className=" h-full bg-[#F4F4FF] flex flex-col gap-5 py-4 px-8 lg:px-2">
       <img
@@ -28,6 +30,9 @@ export default function Sidebar(props: Props) {
             onClick={() => {
               setValue(field.value);
               props.onClick(field.value);
+              if (state.onErrorText) {
+                state.onErrorText("");
+              }
             }}
           />
         ))}

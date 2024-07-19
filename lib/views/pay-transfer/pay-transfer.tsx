@@ -134,11 +134,16 @@ const TransferDetail = (props: TransferDetailProps) => {
   React.useEffect(() => {
     if (timeLeft === 0) return;
     if (!props.start) return;
+    let timer: string | number | NodeJS.Timeout | undefined;
 
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
-    }, 1000);
-    if (props.validating) {
+    if (state.paymentScreen === "transfer") {
+      // eslint-disable-next-line no-var
+      timer = setInterval(() => {
+        setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+      }, 1000);
+    }
+
+    if (props.validating || state.paymentScreen !== "transfer") {
       clearInterval(timer);
       setTimeLeft(defaultTime);
     }
@@ -146,7 +151,7 @@ const TransferDetail = (props: TransferDetailProps) => {
     return () => clearInterval(timer);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeLeft, props.start]);
+  }, [timeLeft, props.start, state.paymentScreen]);
 
   const progress = ((defaultTime - timeLeft) / defaultTime) * 100;
   return (

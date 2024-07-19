@@ -37,12 +37,18 @@ export function PayCard() {
 
   const { makePayment, makingPayment } = useCardPayment({
     onSuccess(_val) {
-      if (_val.status === "pending_authorization")
+      if (_val.status === "pending_authorization") {
         setPageState((prev) => ({
           ...prev,
           screen: "pin",
           reference: _val.reference,
         }));
+      }
+      if (_val.status === "failed") {
+        if (state.onErrorText) {
+          state.onErrorText(_val?.providerMessage || "Payment Failed");
+        }
+      }
     },
     reference: state.merchantKey,
   });
@@ -177,6 +183,7 @@ const BankDetailForm = (props: BankDetailFormProps) => {
     expiry: "",
     validator: false,
   });
+  const { state } = useCheckoutContext();
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -216,6 +223,9 @@ const BankDetailForm = (props: BankDetailFormProps) => {
               expiry: input.expiry,
             });
           }
+          if (state.onErrorText) {
+            state.onErrorText("");
+          }
         }}
         className=" grid grid-cols-2 gap-4 gap-y-6"
       >
@@ -254,7 +264,9 @@ const BankDetailForm = (props: BankDetailFormProps) => {
           type="submit"
           className=" col-span-2"
         >
-          Pay USD 14.99
+          {props.loading
+            ? "Validating..."
+            : ` Pay ${state?.data?.currency || "USD"} ${state?.data?.amount || 0}`}
         </Button>
       </form>
     </div>
