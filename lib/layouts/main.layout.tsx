@@ -37,7 +37,7 @@ export function MainLayout(props: Props) {
     <div className=" relative min-h-[50dvh] ">
       <div className="lg:shadow-lg rounded-lg bg-white grid min-h-[400px] h-full grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[800px] mx-auto  ">
         <Sidebar onClick={props.onChange} />{" "}
-        <main className=" h-full  grid grid-rows-[auto_1fr] gap-4 px-3 md:px-6 pt-6 pb-2 overflow-y-auto max-h-[calc(100dvh_-_80px)] lg:max-h-[calc(100%_-_40px)]">
+        <main className=" h-full  grid grid-rows-[auto_1fr] gap-4 px-3 md:px-6 pt-6 pb-2 overflow-y-auto max-h-[calc(100dvh_-_80px)] lg:max-h-[calc(100%_-_40px)] hide-scrollbar">
           {state.paymentScreen !== "options" && (
             <div className=" flex lg:hidden gap-4  top-0 font-semibold text-[#3D3844]">
               <Icon className=" fill-[#9E9BA1]" /> {Text}
