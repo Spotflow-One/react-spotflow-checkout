@@ -5,10 +5,19 @@ import { PayTransfer } from "@library/views/pay-transfer/pay-transfer";
 import { PayCard } from "@library/views/pay-card/pay-card";
 import { useCheckoutContext } from "@library/context/checkout.provider";
 import { sidebarDataLinkList, SidebarLink } from "@library/layouts/sidebar";
+import React from "react";
 
 type ScreenType = "card" | "ussd" | "transfer" | "options";
 export function Checkouts() {
   const { state } = useCheckoutContext();
+
+  React.useEffect(() => {
+    const handleBeforeUnload = (evt: BeforeUnloadEvent) => {
+      evt.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+  }, []);
 
   return (
     <MainLayout

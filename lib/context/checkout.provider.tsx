@@ -1,18 +1,17 @@
-import { CheckoutData } from "@library/types";
+import { InitialiseConfig } from "@library/types";
 import React from "react";
 
 type ScreenType = "card" | "ussd" | "transfer" | "options";
 
 type StateType = {
-  data: CheckoutData;
+  initialData?: InitialiseConfig;
   open: boolean;
   onOpenChange(_val: boolean): void;
   paymentScreen: ScreenType;
   onPaymentScreen(_val: ScreenType): void;
-  merchantKey: string;
-  onMerchantKeyChange(_val: string): void;
   errorText?: string;
   onErrorText?: (_val: string) => void;
+  onDataUpdated(_val: InitialiseConfig): void;
 };
 type CheckoutStateType = {
   state?: StateType;
@@ -21,17 +20,17 @@ type CheckoutStateType = {
 const CheckoutContext = React.createContext<CheckoutStateType>({});
 
 type CheckoutProviderProps = {
-  data: CheckoutData;
+  data?: InitialiseConfig;
   children?: (_val: StateType) => React.ReactElement | React.ReactElement;
   open?: boolean;
   onOpenChange?: (_val: boolean) => void;
 };
 export function CheckoutProvider(props: CheckoutProviderProps) {
+  const [initialData, setInitialData] = React.useState<InitialiseConfig>({
+    ...props.data,
+  } as InitialiseConfig);
   const [open, setOpen] = React.useState(false);
   const [errorText, setErrorText] = React.useState<string | undefined>("");
-  const [merchantKey, setMerchantKey] = React.useState(
-    props.data.merchantKey || "sk_test_f998479c0ee241a795270a55aa8dab27",
-  );
 
   const [paymentScreen, setPaymentScreen] = React.useState<ScreenType>("card");
   const onPaymentScreen = (values: ScreenType) => {
@@ -39,8 +38,7 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
   };
   const state: StateType = React.useMemo(() => {
     return {
-      data: props.data,
-      open: props.open || open,
+      open: !!initialData && (props.open || open),
       onOpenChange(value) {
         if (props.onOpenChange) {
           props.onOpenChange(value);
@@ -51,14 +49,14 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
       },
       paymentScreen,
       onPaymentScreen,
-      merchantKey,
-      onMerchantKeyChange(_val) {
-        setMerchantKey(_val); //
-      },
       errorText,
       onErrorText(_val) {
         setErrorText(_val); //
       },
+      onDataUpdated(_val) {
+        setInitialData(_val);
+      },
+      initialData,
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -80,9 +78,12 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
 export const useCheckoutContext = () => {
   const { state, onOpenChange } = React.useContext(CheckoutContext);
   if (!state) throw new Error("context is not available");
+  // if (!state?.initialData)
+  //   throw new Error("Initial Config Data is not provided");
 
   return {
     state,
     onOpenChange,
+    config: state.initialData as InitialiseConfig,
   };
 };

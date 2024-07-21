@@ -18,7 +18,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useDebounce } from "@library/hooks/use-debounce";
 
 export function PayTransfer() {
-  const { state } = useCheckoutContext();
+  const { config } = useCheckoutContext();
   const timeout = 470;
   const [screen, setScreen] = React.useState("detail");
   const queryClient = useQueryClient();
@@ -38,18 +38,18 @@ export function PayTransfer() {
         setWaiting(true);
       }
     },
-    reference: state.merchantKey,
+    reference: config.merchantKey,
   });
 
   const onPayment = () => {
-    if (state.data?.email) {
+    if (config?.email) {
       transferPayment({
         payload: {
-          amount: state.data.amount,
+          amount: config.amount,
           channel: "bank_transfer",
-          currency: state.data.currency || "USD",
+          currency: config.currency || "USD",
           customer: {
-            email: state.data.email,
+            email: config.email,
           },
           reference: generatePaymentReference(),
         },
@@ -60,7 +60,7 @@ export function PayTransfer() {
     enabler: !!reference && debouncedHavePaid && seconds > 0,
     reference,
     interval: 0,
-    merchantKey: state.merchantKey,
+    merchantKey: config.merchantKey,
   });
 
   React.useEffect(() => {
@@ -127,7 +127,7 @@ type TransferDetailProps = {
 };
 
 const TransferDetail = (props: TransferDetailProps) => {
-  const { state } = useCheckoutContext();
+  const { state, config } = useCheckoutContext();
   const defaultTime = 589;
   const [timeLeft, setTimeLeft] = React.useState(defaultTime);
 
@@ -137,7 +137,6 @@ const TransferDetail = (props: TransferDetailProps) => {
     let timer: string | number | NodeJS.Timeout | undefined;
 
     if (state.paymentScreen === "transfer") {
-       
       timer = setInterval(() => {
         setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
       }, 1000);
@@ -157,8 +156,8 @@ const TransferDetail = (props: TransferDetailProps) => {
   return (
     <div className=" grid gap-4">
       <h2 className=" text-center font-semibold text-xl text-[#55515B]">
-        Transfer {state?.data?.currency || "USD"} {state?.data?.amount || 0} to
-        the details below
+        Transfer {config?.currency || "USD"} {config?.amount || 0} to the
+        details below
       </h2>
       <div className=" grid gap-4">
         <div className="bg-[#F4F4FF] py-8 px-7 rounded-lg grid gap-8">

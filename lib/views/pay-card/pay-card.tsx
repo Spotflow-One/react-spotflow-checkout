@@ -28,7 +28,7 @@ type CardDetailType = {
   expiry: string;
 };
 export function PayCard() {
-  const { state } = useCheckoutContext();
+  const { state, config } = useCheckoutContext();
   const [pageState, setPageState] = React.useState({
     reference: "",
     providerMessage: "",
@@ -50,7 +50,7 @@ export function PayCard() {
         }
       }
     },
-    reference: state.merchantKey,
+    reference: config.merchantKey,
   });
 
   const { validatePayment, validatingPayment } = useValidatePayment({
@@ -67,7 +67,7 @@ export function PayCard() {
         }));
       }
     },
-    reference: state.merchantKey,
+    reference: config.merchantKey,
   });
 
   const onValidate = (val: string) => {
@@ -90,7 +90,7 @@ export function PayCard() {
           _val?.providerMessage || "Enter the OTP sent to your phone",
       }));
     },
-    reference: state.merchantKey,
+    reference: config.merchantKey,
   });
 
   const onAuthorisation = (_val: string) => {
@@ -107,11 +107,11 @@ export function PayCard() {
   const onCardPayment = (val: CardDetailType) => {
     makePayment({
       payload: {
-        amount: state.data.amount,
+        amount: config.amount,
         channel: "card",
         currency: "USD",
         customer: {
-          email: state.data.email,
+          email: config.email,
         },
         reference: generatePaymentReference(),
         card: {
@@ -183,7 +183,7 @@ const BankDetailForm = (props: BankDetailFormProps) => {
     expiry: "",
     validator: false,
   });
-  const { state } = useCheckoutContext();
+  const { state, config } = useCheckoutContext();
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -266,7 +266,7 @@ const BankDetailForm = (props: BankDetailFormProps) => {
         >
           {props.loading
             ? "Validating..."
-            : ` Pay ${state?.data?.currency || "USD"} ${state?.data?.amount || 0}`}
+            : ` Pay ${config?.currency || "USD"} ${config?.amount || 0}`}
         </Button>
       </form>
     </div>

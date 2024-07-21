@@ -90,12 +90,12 @@ export function MainLayout(props: Props) {
 }
 
 const TopContainer = () => {
-  const { state } = useCheckoutContext();
+  const { config } = useCheckoutContext();
   return (
     <div className=" bg-[#01008E] py-12 px-3 md:py-7 md:px-8 grid gap-4 grid-rows-[51px_1fr] rounded-xl text-white">
       <div className=" flex gap-4 items-center justify-between border-b border-b-white text-white leading-8">
-        <p className=" text-sm whitespace-nowrap">{state.data?.email}</p>
-        <p className=" text-sm">{state?.data?.productName}</p>
+        <p className=" text-sm whitespace-nowrap">{config?.email}</p>
+        <p className=" text-sm">{"Leagues Pass"}</p>
       </div>
       <div className=" flex self-start items-center gap-4 justify-between">
         <h3 className=" flex items-center leading-10">USD 1 = NGN 1,483.98</h3>
@@ -103,7 +103,7 @@ const TopContainer = () => {
           <h3>
             Pay{" "}
             <span className=" font-semibold">
-              {state?.data?.currency} {state?.data?.amount}
+              {config?.currency} {config?.amount}
             </span>
           </h3>
           <span className=" inline-block bg-[#32BB78] text-xs whitespace-nowrap py-1 px-3 rounded-sm">
