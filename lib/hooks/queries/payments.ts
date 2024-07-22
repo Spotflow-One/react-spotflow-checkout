@@ -8,7 +8,7 @@ import {
   TransferPaymentRequest,
   ValidateCardPaymentRequest,
 } from "./types/payment.types";
-import { getRequest, postRequest } from "@library/api/caller";
+import { getRequest, getRequestParams, postRequest } from "@library/api/caller";
 import handleApiError from "@library/utils/handle-api-error";
 
 type UseCardPaymentProps = Prettify<{
@@ -236,6 +236,43 @@ export const useGetMerchantKeys = (props: UseGetMerchantKeysProps) => {
   return {
     merchantKeys: data || [],
     fetchingMerchantKeys: isFetching,
+    error,
+    isSuccess,
+    isError,
+    refetch,
+  };
+};
+
+type UseGetPaymentRateProps = {
+  enabler?: boolean;
+  to: string; // ISO 4217 currency code (e.g., EUR, USD)
+  from?: string; // ISO 4217 currency code (e.g., EUR, USD)
+  merchantKeys?: string;
+};
+
+export const useGetPaymentRate = (props: UseGetPaymentRateProps) => {
+  const { enabler, to, from, merchantKeys } = props;
+  const { data, isFetching, isError, isSuccess, error, refetch } = useQuery({
+    queryKey: ["useGetPaymentRate"],
+    queryFn: () =>
+      getRequestParams({
+        url: "payments/rates",
+        config: {
+          headers: {
+            Authorization: `Bearer ${merchantKeys || ""}`,
+          },
+        },
+        params: {
+          "request.to": to,
+          "request.from": from,
+        },
+      }),
+    enabled: !!enabler,
+  });
+
+  return {
+    paymentRate: data || {},
+    fetchingPaymentRate: isFetching,
     error,
     isSuccess,
     isError,

@@ -43,6 +43,9 @@ export default function Sidebar(props: Props) {
         alt=""
         className=" w-12 h-auto bg-contain self-center"
       />
+      <h2 className=" text-xl text-[#6D6A73] font-semibold whitespace-nowrap  hidden lg:block">
+        PAYMENT OPTIONS
+      </h2>
       <div className=" flex-col gap-2 hidden lg:flex">
         {sidebarDataLinkList.map((field) => (
           <SidebarLink

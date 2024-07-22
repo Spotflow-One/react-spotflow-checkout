@@ -15,6 +15,7 @@ interface FuncProp<T> {
 interface GetFuncProp<T extends ApiObjType> {
   url: string;
   params: T | undefined;
+  config?: AxiosRequestConfig;
 }
 
 export const postRequest = async <T, R>({
@@ -64,8 +65,9 @@ export const deleteRequestTest = async ({ url }: { url: string }) => {
 export const getRequestParams = async <T extends ApiObjType, R>({
   url,
   params,
+  config,
 }: GetFuncProp<T>) => {
-  const response = await Api.get<R>(url, { params });
+  const response = await Api.get<R>(url, { ...config, params });
 
   const { data } = response;
 
