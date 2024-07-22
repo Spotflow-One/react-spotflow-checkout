@@ -9,64 +9,70 @@ import { useTimer } from "@library/hooks/use-timer";
 import { useCheckoutContext } from "@library/context/checkout.provider";
 import { DeterminateCircularProgressbar } from "@library/components/determinate-circular-progressbar";
 import { getTimeformatWithMomentAppend } from "@library/utils/format-date";
-import {
-  usePaymentTransfer,
-  useVerifyPaymentTransfer,
-} from "@library/hooks/queries/payments";
-import { generatePaymentReference } from "@library/utils/ref";
+import { useVerifyPaymentTransfer } from "@library/hooks/queries/payments";
 import { useQueryClient } from "@tanstack/react-query";
-import { useDebounce } from "@library/hooks/use-debounce";
+import { PaymentResponseData } from "@library/hooks/queries/types/payment.types";
 
+type TransferStateType = {
+  screen: string;
+  reference: string;
+  payment: PaymentResponseData | null;
+  waiting: boolean;
+  count: number;
+};
 export function PayTransfer() {
-  const { config } = useCheckoutContext();
+  const { config, state } = useCheckoutContext();
+  const [transferState, setTransferState] = React.useState<TransferStateType>({
+    screen: "detail",
+    reference: "",
+    payment: null,
+    waiting: false,
+    count: 1,
+  });
   const timeout = 470;
-  const [screen, setScreen] = React.useState("detail");
   const queryClient = useQueryClient();
-  const [reference, setReference] = React.useState("");
-  const [havePaid, setHavePaid] = React.useState(false);
-  const [waiting, setWaiting] = React.useState(false);
-  const debouncedHavePaid = useDebounce(havePaid, 30000);
 
-  const { formatted, seconds } = useTimer(timeout, waiting);
+  const { formatted } = useTimer(timeout, transferState.waiting);
 
-  const { transferPayment, transferringPayment } = usePaymentTransfer({
-    onSuccess(_val) {
-      if (_val.reference) {
-        setReference(_val.reference);
-        setHavePaid(true);
-        setScreen("wait");
-        setWaiting(true);
-      }
-    },
-    reference: config.merchantKey,
+  console.log({
+    dsdhsjk:
+      !!transferState.reference &&
+      state.paymentScreen === "transfer" &&
+      transferState.screen === "wait",
+    ddfjkjfks: state.payment,
   });
-
-  const onPayment = () => {
-    if (config?.email) {
-      transferPayment({
-        payload: {
-          amount: config.amount,
-          channel: "bank_transfer",
-          currency: config.currency || "USD",
-          customer: {
-            email: config.email,
-          },
-          reference: generatePaymentReference(),
-        },
-      });
-    }
-  };
   const { payment } = useVerifyPaymentTransfer({
-    enabler: !!reference && debouncedHavePaid && seconds > 0,
-    reference,
-    interval: 0,
+    enabler:
+      !!state?.payment?.reference &&
+      state.paymentScreen === "transfer" &&
+      transferState.screen === "wait",
+    reference: state?.payment?.reference || "",
+    interval: 17000,
     merchantKey: config.merchantKey,
+    isPollingEnabled: state.paymentScreen === "transfer",
   });
+
+  React.useEffect(() => {
+    if (state.paymentScreen !== "transfer") {
+      setTransferState((prev) => ({
+        ...prev,
+        screen: "detail",
+        reference: "",
+        payment: null,
+        waiting: false,
+        count: 1,
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.paymentScreen]);
 
   React.useEffect(() => {
     if (payment?.status === "successful") {
       queryClient.cancelQueries({ queryKey: ["useVerifyPaymentTransfer"] });
-      setScreen("success");
+      setTransferState((prev) => ({
+        ...prev,
+        screen: "success",
+      }));
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,42 +81,59 @@ export function PayTransfer() {
   return (
     <div>
       <div
-        data-state={screen}
+        data-state={transferState.screen}
         className={cn("hidden data-[state=detail]:block")}
       >
         <TransferDetail
           onSubmit={() => {
             // setScreen("wait");
-            if (havePaid) return setScreen("wait");
-            onPayment();
+            if (state.payment) {
+              setTransferState((prev) => ({
+                ...prev,
+                screen: "wait",
+              }));
+            }
           }}
-          start={screen === "detail"}
-          loading={transferringPayment}
+          data={state.payment}
+          start={transferState.screen === "detail"}
+          loading={state.loading}
         />
       </div>
       <div
-        data-state={screen}
+        data-state={transferState.screen}
         className={cn("hidden data-[state=expiry]:block")}
       >
         <AccountExpiry />
       </div>
-      <div data-state={screen} className={cn("hidden data-[state=auto]:block")}>
+      <div
+        data-state={transferState.screen}
+        className={cn("hidden data-[state=auto]:block")}
+      >
         <TransactionAuto
           onWait={() => {
-            setScreen("wait");
+            setTransferState((prev) => ({
+              ...prev,
+              screen: "wait",
+            }));
           }}
         />
       </div>
-      <div data-state={screen} className={cn("hidden data-[state=wait]:block")}>
+      <div
+        data-state={transferState.screen}
+        className={cn("hidden data-[state=wait]:block")}
+      >
         <WaitingView
           onShow={() => {
-            setScreen("detail");
+            setTransferState((prev) => ({
+              ...prev,
+              screen: "detail",
+            }));
           }}
           formatted={formatted}
         />
       </div>
       <div
-        data-state={screen}
+        data-state={transferState.screen}
         className={cn("hidden data-[state=success]:block")}
       >
         <SuccessView />
@@ -124,6 +147,7 @@ type TransferDetailProps = {
   start?: boolean;
   loading?: boolean;
   validating?: boolean;
+  data: PaymentResponseData | null;
 };
 
 const TransferDetail = (props: TransferDetailProps) => {
@@ -147,13 +171,22 @@ const TransferDetail = (props: TransferDetailProps) => {
       setTimeLeft(defaultTime);
     }
 
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+    };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft, props.start, state.paymentScreen]);
 
   const progress = ((defaultTime - timeLeft) / defaultTime) * 100;
-  return (
+  return props.loading ? (
+    <div className=" grid gap-3 place-items-center">
+      <div>
+        <img src="@/assets/img/loader.gif" alt="loader" />
+        <p className="text-center text-gray-400">Getting Bank Details</p>
+      </div>
+    </div>
+  ) : (
     <div className=" grid gap-4">
       <h2 className=" text-center font-semibold text-xl text-[#55515B]">
         Transfer {config?.currency || "USD"} {config?.amount || 0} to the
@@ -161,7 +194,7 @@ const TransferDetail = (props: TransferDetailProps) => {
       </h2>
       <div className=" grid gap-4">
         <div className="bg-[#F4F4FF] py-8 px-7 rounded-lg grid gap-8">
-          {detailCardMockList().map((field) => (
+          {detailCardMockList(state.payment).map((field) => (
             <ItemRowCard
               key={field.title}
               title={field.title}
@@ -213,20 +246,19 @@ const ItemRowCard = (props: ItemRowCardProps) => {
     </div>
   );
 };
-
-const detailCardMockList = () => [
+const detailCardMockList = (values?: PaymentResponseData | null) => [
   {
     title: "BANK NAME",
-    value: "Paystack Team",
+    value: values?.bankDetails?.bankName || "",
   },
   {
     title: "ACCOUNT NUMBER",
-    value: "0123456789",
+    value: values?.bankDetails?.accountNumber || "",
     isCopy: true,
   },
   {
     title: "AMOUNT",
-    value: "USD 14.99",
+    value: `${values?.currency || ""} ${values?.amount || 0}`,
     isCopy: true,
   },
 ];
@@ -277,7 +309,10 @@ const AccountExpiry = () => {
         >
           Try again
         </Button>
-        <Button className=" border border-[#C0B5CF] bg-white text-[#55515B]">
+        <Button
+          disabled={!state?.payment}
+          className=" border border-[#C0B5CF] bg-white text-[#55515B]"
+        >
           I already sent the money
         </Button>
       </div>

@@ -1,3 +1,4 @@
+import { PaymentResponseData } from "@library/hooks/queries/types/payment.types";
 import { InitialiseConfig } from "@library/types";
 import React from "react";
 
@@ -12,6 +13,10 @@ type StateType = {
   errorText?: string;
   onErrorText?: (_val: string) => void;
   onDataUpdated(_val: InitialiseConfig): void;
+  payment: PaymentResponseData | null;
+  onPaymentResponse(_val: PaymentResponseData): void;
+  loading: boolean;
+  onLoading(_val: boolean): void;
 };
 type CheckoutStateType = {
   state?: StateType;
@@ -30,8 +35,11 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
     ...props.data,
   } as InitialiseConfig);
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [errorText, setErrorText] = React.useState<string | undefined>("");
-
+  const [payment, setPayment] = React.useState<PaymentResponseData | null>(
+    null,
+  );
   const [paymentScreen, setPaymentScreen] = React.useState<ScreenType>("card");
   const onPaymentScreen = (values: ScreenType) => {
     setPaymentScreen(values);
@@ -60,10 +68,17 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
         setInitialData(_val);
       },
       initialData,
+      payment, // replace with actual data
+      onPaymentResponse(_val) {
+        // replace with actual data
+        setPayment(_val);
+      },
+      loading,
+      onLoading: setLoading,
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.data, open, props.open, paymentScreen, errorText]);
+  }, [props.data, open, props.open, paymentScreen, errorText, payment]);
 
   return (
     <CheckoutContext.Provider

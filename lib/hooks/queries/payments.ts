@@ -178,14 +178,14 @@ type UseVerifyPaymentTransferProps = {
   reference: string;
   isPollingEnabled?: boolean;
   enabler: boolean;
-  interval: number;
+  interval?: number;
   merchantKey?: string;
 };
 
 export const useVerifyPaymentTransfer = (
   props: UseVerifyPaymentTransferProps,
 ) => {
-  const { reference, isPollingEnabled, enabler, interval, merchantKey } = props;
+  const { reference, enabler, interval, merchantKey } = props;
   const { data, isFetching, isError, isSuccess, error, refetch } = useQuery({
     queryKey: ["useVerifyPaymentTransfer"],
     queryFn: () =>
@@ -198,7 +198,7 @@ export const useVerifyPaymentTransfer = (
         },
       }),
     enabled: !!enabler,
-    refetchInterval: isPollingEnabled ? interval : false,
+    refetchInterval: interval || false,
     retry: false,
   });
 

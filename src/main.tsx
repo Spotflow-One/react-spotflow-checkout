@@ -13,9 +13,9 @@ const PaymentConponents = () => {
     amount: 4000,
     currency: "NGN",
     email: "temi@mailinator.com",
-    merchantKey: "",
+    merchantKey: "sk_test_f998479c0ee241a795270a55aa8dab27",
     reference: "",
-    plan: "",
+    plan: "", //a6851d77-5ca8-40c9-8c25-af3df85002e7     // a9d53c4c-4452-4d00-953e-bb0f2780702a
   });
   return (
     <div>

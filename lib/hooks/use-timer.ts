@@ -13,7 +13,6 @@ export const useTimer = (timer: number, start?: boolean) => {
     }, 1000);
 
     return () => clearInterval(interval);
-     
   }, [seconds, start]);
 
   return { seconds, formatted: getTimeformatWithMomentAppend(seconds, true) };

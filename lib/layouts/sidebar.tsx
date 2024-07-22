@@ -6,6 +6,8 @@ import PayWithUssdIcon from "@library/assets/pay-with-ussd-side-icon.svg?react";
 import PayWithTransferIcon from "@library/assets/pay-with-transfer-side-icon.svg?react";
 import { cn } from "@library/utils/utils";
 import { useCheckoutContext } from "@library/context/checkout.provider";
+import { usePaymentTransfer } from "@library/hooks/queries/payments";
+import { generatePaymentReference } from "@library/utils/ref";
 
 type Props = {
   onClick(_val: string): void;
@@ -13,7 +15,16 @@ type Props = {
 
 export default function Sidebar(props: Props) {
   const [value, setValue] = useState(sidebarDataLinkList[0].value);
-  const { state } = useCheckoutContext();
+  const { state, config } = useCheckoutContext();
+
+  const { transferPayment, transferringPayment } = usePaymentTransfer({
+    onSuccess(_val) {
+      state.onPaymentResponse(_val);
+      state.onLoading(false);
+    },
+    reference: config.merchantKey,
+  });
+
   return (
     <aside className=" h-full bg-[#F4F4FF] flex flex-col gap-5 py-4 px-8 lg:px-2">
       <img
@@ -28,6 +39,23 @@ export default function Sidebar(props: Props) {
             value={value}
             data={field}
             onClick={() => {
+              if (field.value === "transfer") {
+                if (config?.email) {
+                  transferPayment({
+                    payload: {
+                      amount: config.amount,
+                      channel: "bank_transfer",
+                      currency: config.currency || "USD",
+                      customer: {
+                        email: config.email,
+                      },
+                      reference: config.reference || generatePaymentReference(),
+                      planId: config.plan,
+                    },
+                  });
+                  state.onLoading(transferringPayment);
+                }
+              }
               setValue(field.value);
               props.onClick(field.value);
               if (state.onErrorText) {
