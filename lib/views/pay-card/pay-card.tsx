@@ -28,7 +28,7 @@ type CardDetailType = {
   expiry: string;
 };
 export function PayCard() {
-  const { state, config } = useCheckoutContext();
+  const { state, config, onPaymentStatus } = useCheckoutContext();
   const [pageState, setPageState] = React.useState({
     reference: "",
     providerMessage: "",
@@ -43,6 +43,9 @@ export function PayCard() {
           screen: "pin",
           reference: _val.reference,
         }));
+        if (onPaymentStatus) {
+          onPaymentStatus("ongoing");
+        }
       }
       if (_val.status === "failed") {
         if (state.onErrorText) {

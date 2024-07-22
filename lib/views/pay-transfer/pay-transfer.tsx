@@ -21,7 +21,7 @@ type TransferStateType = {
   count: number;
 };
 export function PayTransfer() {
-  const { config, state } = useCheckoutContext();
+  const { config, state, onPaymentStatus } = useCheckoutContext();
   const [transferState, setTransferState] = React.useState<TransferStateType>({
     screen: "detail",
     reference: "",
@@ -34,13 +34,6 @@ export function PayTransfer() {
 
   const { formatted } = useTimer(timeout, transferState.waiting);
 
-  console.log({
-    dsdhsjk:
-      !!transferState.reference &&
-      state.paymentScreen === "transfer" &&
-      transferState.screen === "wait",
-    ddfjkjfks: state.payment,
-  });
   const { payment } = useVerifyPaymentTransfer({
     enabler:
       !!state?.payment?.reference &&
@@ -92,6 +85,9 @@ export function PayTransfer() {
                 ...prev,
                 screen: "wait",
               }));
+              if (onPaymentStatus) {
+                onPaymentStatus("ongoing");
+              }
             }
           }}
           data={state.payment}

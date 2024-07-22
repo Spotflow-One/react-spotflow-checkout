@@ -17,10 +17,12 @@ type StateType = {
   onPaymentResponse(_val: PaymentResponseData): void;
   loading: boolean;
   onLoading(_val: boolean): void;
+  paymentStatus: string;
 };
 type CheckoutStateType = {
   state?: StateType;
   onOpenChange?: (_val: boolean) => void;
+  onPaymentStatus?: (_val: string) => void;
 };
 const CheckoutContext = React.createContext<CheckoutStateType>({});
 
@@ -36,6 +38,7 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
   } as InitialiseConfig);
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [paymentStatus, setPaymentStatus] = React.useState("");
   const [errorText, setErrorText] = React.useState<string | undefined>("");
   const [payment, setPayment] = React.useState<PaymentResponseData | null>(
     null,
@@ -75,14 +78,27 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
       },
       loading,
       onLoading: setLoading,
+      paymentStatus,
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.data, open, props.open, paymentScreen, errorText, payment]);
+  }, [
+    props.data,
+    open,
+    props.open,
+    paymentScreen,
+    errorText,
+    payment,
+    paymentStatus,
+  ]);
 
   return (
     <CheckoutContext.Provider
-      value={{ state, onOpenChange: props.onOpenChange || setOpen }}
+      value={{
+        state,
+        onOpenChange: props.onOpenChange || setOpen,
+        onPaymentStatus: setPaymentStatus,
+      }}
     >
       {typeof props.children === "function" ? (
         props.children(state)
@@ -94,7 +110,8 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
 }
 
 export const useCheckoutContext = () => {
-  const { state, onOpenChange } = React.useContext(CheckoutContext);
+  const { state, onOpenChange, onPaymentStatus } =
+    React.useContext(CheckoutContext);
   if (!state) throw new Error("context is not available");
   // if (!state?.initialData)
   //   throw new Error("Initial Config Data is not provided");
@@ -103,5 +120,6 @@ export const useCheckoutContext = () => {
     state,
     onOpenChange,
     config: state.initialData as InitialiseConfig,
+    onPaymentStatus,
   };
 };
