@@ -38,7 +38,10 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
   };
   const state: StateType = React.useMemo(() => {
     return {
-      open: !!initialData && (props.open || open),
+      open:
+        !!initialData &&
+        !!Object.values(initialData).length &&
+        (props.open || open),
       onOpenChange(value) {
         if (props.onOpenChange) {
           props.onOpenChange(value);
