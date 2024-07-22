@@ -2,6 +2,7 @@ import React from "react";
 import CopyIcon from "@library/assets/copy-icon.svg?react";
 import TransferSuccess from "@library/assets/transfer-success-icon.svg?react";
 import WarningIcon from "@library/assets/warning-icon.svg?react";
+import SentIcon from "@library/assets/payment-sent-icon.svg?react";
 import CheckoutSpinnerIcon from "@library/assets/payment-home-icon.svg?react";
 import { Button } from "@library/components/button/button";
 import { cn } from "@library/utils/utils";
@@ -56,7 +57,6 @@ export function PayTransfer() {
         count: 1,
       }));
     }
-     
   }, [state.paymentScreen]);
 
   React.useEffect(() => {
@@ -391,7 +391,7 @@ const WaitingView = (props: WaitingProps) => {
         We’re waiting to confirm your transfer. This can take a few minutes
       </h4>
       <div className=" grid grid-cols-[auto_1fr_auto] gap-3 items-center">
-        <DottedSpan text="Sent" />{" "}
+        <DottedSpan Icon={SentIcon} text="Sent" />{" "}
         <span
           className={cn(
             " relative block h-2 an rounded-xl -top-2 bg-[#E6E6E7] ",
@@ -438,10 +438,15 @@ const SuccessView = () => {
   );
 };
 
-const DottedSpan = ({ text }: { text: string }) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const DottedSpan = ({ text, Icon }: { text: string; Icon?: any }) => {
   return (
     <span className="flex flex-col justify-center">
-      <span className=" border border-dashed rounded-full block h-9 w-9 border-[#B6B4B9]"></span>
+      {Icon ? (
+        <Icon />
+      ) : (
+        <span className=" border border-dashed rounded-full block h-9 w-9 border-[#B6B4B9]"></span>
+      )}
       <span className=" text-sm text-[#9E9BA1] text-center">{text}</span>
     </span>
   );
