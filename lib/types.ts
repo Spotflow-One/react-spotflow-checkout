@@ -31,6 +31,15 @@ export declare type InitialiseConfig = {
    * merchant generated secret key
    */
   merchantKey: string;
+  /**
+   * 
+generatePaymentReference = () => {
+  const timestamp = Date.now().toString(36);
+  const uid = uuidv4();
+  return `SPF-${timestamp}-${uid}`.toUpperCase();
+};
+
+   */
   reference?: string;
 };
 

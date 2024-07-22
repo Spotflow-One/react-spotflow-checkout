@@ -1,5 +1,4 @@
 import "./index.css";
-export * from "./checkout-types";
 import {
   // PaymentCheckoutButton,
   PaymentContextProvider,
@@ -14,8 +13,6 @@ const PaymentConponents = () => {
     amount: 4000,
     currency: "NGN",
     email: "temi@mailinator.com",
-    fullname: "kayode ogunnowo",
-    phone: "09090909090",
     merchantKey: "",
     reference: "",
     plan: "",
@@ -37,6 +34,16 @@ const PaymentConponents = () => {
   );
 };
 
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <div>
+      <PaymentContextProvider>
+        <PaymentConponents />
+      </PaymentContextProvider>
+    </div>
+  </React.StrictMode>,
+);
+
 // ReactDOM.createRoot(document.getElementById("root")!).render(
 //   <React.StrictMode>
 //     <div>
@@ -56,13 +63,3 @@ const PaymentConponents = () => {
 //     </div>
 //   </React.StrictMode>,
 // );
-
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <div>
-      <PaymentContextProvider>
-        <PaymentConponents />
-      </PaymentContextProvider>
-    </div>
-  </React.StrictMode>,
-);
