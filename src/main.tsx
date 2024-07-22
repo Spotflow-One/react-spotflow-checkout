@@ -10,12 +10,12 @@ import ReactDOM from "react-dom/client";
 
 const PaymentConponents = () => {
   const initialFn = useSpotflowPayment({
-    amount: 4000,
+    amount: 9,
     currency: "NGN",
     email: "temi@mailinator.com",
     merchantKey: "sk_test_f998479c0ee241a795270a55aa8dab27",
     reference: "",
-    plan: "", //a6851d77-5ca8-40c9-8c25-af3df85002e7     // a9d53c4c-4452-4d00-953e-bb0f2780702a
+    plan: "a9d53c4c-4452-4d00-953e-bb0f2780702a", //a6851d77-5ca8-40c9-8c25-af3df85002e7     // a9d53c4c-4452-4d00-953e-bb0f2780702a
   });
   return (
     <div>

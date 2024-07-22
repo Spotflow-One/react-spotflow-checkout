@@ -19,10 +19,21 @@ export default function Sidebar(props: Props) {
 
   const { transferPayment, transferringPayment } = usePaymentTransfer({
     onSuccess(_val) {
-      state.onPaymentResponse(_val);
       state.onLoading(false);
+      if (_val.status === "failed") {
+        if (state.onErrorText) {
+          state.onErrorText(_val?.providerMessage || "Payment Failed");
+        }
+        return;
+      }
+      state.onPaymentResponse(_val);
     },
     reference: config.merchantKey,
+    onError(_val) {
+      if (state.onErrorText) {
+        state.onErrorText(_val || "Payment Failed");
+      }
+    },
   });
 
   return (
@@ -54,6 +65,9 @@ export default function Sidebar(props: Props) {
                     },
                   });
                   state.onLoading(transferringPayment);
+                  if (state.onErrorText) {
+                    state.onErrorText("");
+                  }
                 }
               }
               setValue(field.value);

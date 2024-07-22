@@ -9,6 +9,7 @@ import {
   ValidateCardPaymentRequest,
 } from "./types/payment.types";
 import { getRequest, postRequest } from "@library/api/caller";
+import handleApiError from "@library/utils/handle-api-error";
 
 type UseCardPaymentProps = Prettify<{
   onSuccess(_val: PaymentResponseData): void;
@@ -133,7 +134,7 @@ export const useValidatePayment = (props: UseValidatePaymentProps) => {
 
 type UsePaymentTransferProps = {
   onSuccess(_val: PaymentResponseData): void;
-  onError?: (_val: unknown) => void;
+  onError?: (_val: string) => void;
   onDrawer?: () => void;
   reference: string;
 };
@@ -159,7 +160,7 @@ export const usePaymentTransfer = (props: UsePaymentTransferProps) => {
     },
     onError: (error) => {
       if (onError) {
-        onError(error);
+        onError(handleApiError(error));
       }
       reset();
     },
