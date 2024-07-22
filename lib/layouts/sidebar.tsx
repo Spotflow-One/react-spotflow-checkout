@@ -61,7 +61,7 @@ export default function Sidebar(props: Props) {
                         email: config.email,
                       },
                       reference: config.reference || generatePaymentReference(),
-                      planId: config.plan,
+                      // planId: config.plan,
                     },
                   });
                   state.onLoading(transferringPayment);
