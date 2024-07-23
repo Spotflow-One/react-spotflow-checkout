@@ -26,30 +26,35 @@ export function Checkouts() {
         state.onPaymentScreen(values as ScreenType);
       }}
     >
-      <div
-        data-state={state.paymentScreen}
-        className="hidden data-[state=options]:grid"
-      >
-        <PaymentOptions onClick={state.onPaymentScreen} />
-      </div>
-      <div
-        data-state={state.paymentScreen}
-        className="hidden data-[state=ussd]:grid"
-      >
-        <PayUssd />
-      </div>
-      <div
-        data-state={state.paymentScreen}
-        className="hidden data-[state=transfer]:grid"
-      >
-        <PayTransfer />
-      </div>
-      <div
-        data-state={state.paymentScreen}
-        className="hidden data-[state=card]:grid"
-      >
-        <PayCard />
-      </div>
+      {state.paymentScreen === "options" ? (
+        <div
+          data-state={state.paymentScreen}
+          className="hidden data-[state=options]:grid"
+        >
+          <PaymentOptions onClick={state.onPaymentScreen} />
+        </div>
+      ) : state.paymentScreen === "ussd" ? (
+        <div
+          data-state={state.paymentScreen}
+          className="hidden data-[state=ussd]:grid"
+        >
+          <PayUssd />
+        </div>
+      ) : state.paymentScreen === "transfer" ? (
+        <div
+          data-state={state.paymentScreen}
+          className="hidden data-[state=transfer]:grid"
+        >
+          <PayTransfer />
+        </div>
+      ) : (
+        <div
+          data-state={state.paymentScreen}
+          className="hidden data-[state=card]:grid"
+        >
+          <PayCard />
+        </div>
+      )}
     </MainLayout>
   );
 }
