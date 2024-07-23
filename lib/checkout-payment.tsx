@@ -33,7 +33,7 @@ export function PaymentCheckoutButton(props: CheckoutPaymentProps) {
             </button>
             <Popper open={values.open}>
               <QueryClientProvider client={queryClient}>
-                <Checkouts />
+                {values.open ? <Checkouts /> : null}
               </QueryClientProvider>
             </Popper>
           </React.Fragment>

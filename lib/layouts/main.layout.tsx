@@ -34,53 +34,63 @@ export function MainLayout(props: Props) {
   const { state } = useCheckoutContext();
 
   return (
-    <div className=" relative min-h-[50dvh] ">
+    <div className=" relative h-screen lg:h-auto lg:min-h-[50dvh] ">
       <div className="lg:shadow-lg rounded-lg bg-white grid min-h-[400px] h-full grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[800px] mx-auto  ">
         <Sidebar onClick={props.onChange} />{" "}
-        <main className=" h-full  grid grid-rows-[auto_1fr] gap-4 px-3 md:px-6 pt-6 pb-2 overflow-y-auto max-h-[calc(100dvh_-_80px)] lg:max-h-[calc(100%_-_40px)] hide-scrollbar">
-          {state.paymentScreen !== "options" && (
-            <div className=" flex lg:hidden gap-4  top-0 font-semibold text-[#3D3844]">
-              <Icon className=" fill-[#9E9BA1]" /> {Text}
-            </div>
+        <main
+          className={cn(
+            "  grid gap-4 px-3 md:px-6 pt-2 pb-2 overflow-y-auto max-h-[calc(100dvh_-_80px)] lg:max-h-[calc(100%_-_40px)] hide-scrollbar",
+            state.paymentScreen === "options" && "grid-rows-1",
           )}
-          <TopContainer />
+        >
           <div>
-            {state.errorText && (
-              <p className=" bg-red-500 text-center p-1 rounded-lg px-2 text-white">
-                <ErrorIcon className=" inline mr-3 align-middle" />{" "}
-                {state?.errorText || ""}{" "}
-              </p>
+            {state.paymentScreen !== "options" && (
+              <div className=" flex lg:hidden gap-4 font-semibold text-[#3D3844]">
+                <Icon className=" fill-[#9E9BA1]" /> {Text}
+              </div>
             )}
-            {props.children}
+
+            <TopContainer />
           </div>
-          <div className=" grid grid-rows-[repeat(2,_auto)] gap-4">
-            <div
-              className={cn(
-                " flex lg:hidden justify-between gap-4",
-                state.paymentScreen === "options" && "justify-center",
+          <div className="grid gap-4 overflow-y-auto max-h-max hide-scrollbar">
+            <div>
+              {state.errorText && (
+                <p className=" bg-red-500 text-center p-1 rounded-lg px-2 text-white">
+                  <ErrorIcon className=" inline mr-3 align-middle" />{" "}
+                  {state?.errorText || ""}{" "}
+                </p>
               )}
-            >
-              {state.paymentScreen !== "options" && (
+              {props.children}
+            </div>
+            <div className=" grid grid-rows-[repeat(2,_auto)] gap-4">
+              <div
+                className={cn(
+                  " flex lg:hidden gap-4",
+                  state.paymentScreen === "options" && "justify-center",
+                )}
+              >
+                {state.paymentScreen !== "options" && (
+                  <Button
+                    onClick={() => {
+                      state.onPaymentScreen("options");
+                    }}
+                    className="border-[#E6E6E7] px-1 border-[0.5px] w-auto flex-1 text-xs whitespace-nowrap py-1 items-center bg-white text-[#55515B]"
+                  >
+                    x Change Payment Method
+                  </Button>
+                )}
                 <Button
                   onClick={() => {
-                    state.onPaymentScreen("options");
+                    state.onOpenChange(false);
                   }}
-                  className="border-[#E6E6E7] px-1 border-[0.5px] w-auto lg:flex-1 text-xs whitespace-nowrap py-1 items-center bg-white text-[#55515B]"
+                  className="border-[#E6E6E7]  w-auto  text-xs px-2 border-[0.5px] flex-1 items-center bg-white text-[#55515B]"
                 >
-                  x Change Payment Method
+                  x Cancel Payment
                 </Button>
-              )}
-              <Button
-                onClick={() => {
-                  state.onOpenChange(false);
-                }}
-                className="border-[#E6E6E7]  w-auto  text-xs px-2 border-[0.5px] lg:flex-1 items-center bg-white text-[#55515B]"
-              >
-                x Cancel Payment
-              </Button>
-            </div>
-            <div className=" justify-self-center flex gap-4 items-center font-normal text-[10px] text-[#9E9BA1]">
-              <CertifiedIcon /> PCI DSS Certified
+              </div>
+              <div className=" justify-self-center flex gap-4 items-center font-normal text-[10px] text-[#9E9BA1]">
+                <CertifiedIcon /> PCI DSS Certified
+              </div>
             </div>
           </div>
         </main>
@@ -92,7 +102,7 @@ export function MainLayout(props: Props) {
 const TopContainer = () => {
   const { config } = useCheckoutContext();
   return (
-    <div className=" bg-[#01008E] py-12 px-3 md:py-7 md:px-8 grid gap-4 grid-rows-[51px_1fr] rounded-xl text-white">
+    <div className=" bg-[#01008E] py-5 px-3 md:py-7 md:px-8 grid gap-4 grid-rows-[51px_1fr] rounded-xl text-white">
       <div className=" flex gap-4 items-center justify-between border-b border-b-white text-white leading-8">
         <p className=" text-sm whitespace-nowrap">{config?.email}</p>
         <p className=" text-sm">{"Leagues Pass"}</p>

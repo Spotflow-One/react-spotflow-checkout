@@ -19,50 +19,56 @@ export function PayUssd() {
     <div>
       <div className=" grid grid-rows-[auto_1fr] gap-5">
         <HashIcon className=" justify-self-center" />
-        <div
-          data-state={screen}
-          className={cn("hidden data-[state=bank]:grid")}
-        >
-          <ChooseBankForm
-            onSubmit={() => {
-              setScreen("code");
-            }}
-            onChange={setBank}
-            value={bank}
-          />
-        </div>
-        <div
-          data-state={screen}
-          className={cn(" hidden data-[state=code]:grid")}
-        >
-          <CodeForm value="" />
-        </div>
-        <div
-          data-state={screen}
-          className={cn(" hidden data-[state=success]:grid")}
-        >
-          <SuccessView />
-        </div>
-        <div
-          data-state={screen}
-          className={cn(" hidden data-[state=warning]:grid")}
-        >
-          <WarningView />
-        </div>
-        <div
-          data-state={screen}
-          className={cn("hidden data-[state=wait]:block")}
-        >
-          <WaitingView
-            onShow={() => {
-              // setTransferState((prev) => ({
-              //   ...prev,
-              //   screen: "detail",
-              // }));
-            }}
-            formatted={formatted}
-          />
-        </div>
+        {screen === "warning" ? (
+          <div
+            data-state={screen}
+            className={cn(" hidden data-[state=warning]:grid")}
+          >
+            <WarningView />
+          </div>
+        ) : screen === "code" ? (
+          <div
+            data-state={screen}
+            className={cn(" hidden data-[state=code]:grid")}
+          >
+            <CodeForm value="" />
+          </div>
+        ) : screen === "success" ? (
+          <div
+            data-state={screen}
+            className={cn(" hidden data-[state=success]:grid")}
+          >
+            <SuccessView />
+          </div>
+        ) : screen === "wait" ? (
+          <div
+            data-state={screen}
+            className={cn("hidden data-[state=wait]:block")}
+          >
+            <WaitingView
+              onShow={() => {
+                // setTransferState((prev) => ({
+                //   ...prev,
+                //   screen: "detail",
+                // }));
+              }}
+              formatted={formatted}
+            />
+          </div>
+        ) : (
+          <div
+            data-state={screen}
+            className={cn("hidden data-[state=bank]:grid")}
+          >
+            <ChooseBankForm
+              onSubmit={() => {
+                setScreen("code");
+              }}
+              onChange={setBank}
+              value={bank}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -75,6 +81,17 @@ type ChooseBankFormProps = {
 };
 const ChooseBankForm = (props: ChooseBankFormProps) => {
   const [state, setState] = React.useState<Record<string, string>>({});
+
+  React.useEffect(() => {
+    if (props.value) {
+      setTimeout(() => {
+        if (state.bank) props.onSubmit();
+      }, 1500);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.value]);
+
   return (
     <div className="grid gap-4 max-w-[400px] w-full justify-self-center">
       <p className=" text-[#55515B] text-xl text-center">
@@ -91,13 +108,6 @@ const ChooseBankForm = (props: ChooseBankFormProps) => {
               bank: values,
             }));
             props.onChange(values);
-          }}
-          onBlur={() => {
-            if (props.value) {
-              setTimeout(() => {
-                if (state.bank) props.onSubmit();
-              }, 500);
-            }
           }}
         />
       </div>
@@ -284,13 +294,6 @@ const WaitingView = (props: WaitingProps) => {
         <Button className="border-[#C0B5CF] border bg-white text-[#55515B]">
           Please wait for {props.formatted || ""}
         </Button>
-        <button
-          onClick={props.onShow}
-          type="button"
-          className=" w-full text-center text-[#55515B]"
-        >
-          Show account number
-        </button>
       </div>
     </div>
   );

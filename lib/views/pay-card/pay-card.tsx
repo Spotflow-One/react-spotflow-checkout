@@ -3,6 +3,7 @@ import { Input } from "@library/components/input/input";
 import { Button } from "@library/components/button/button";
 import { OtpInput } from "@library/components/input/otp-input";
 import WarningIcon from "@library/assets/warning-icon.svg?react";
+import loaderGif from "@library/assets/img/loader.gif";
 import TransferSuccess from "@library/assets/transfer-success-icon.svg?react";
 import { cn } from "@library/utils/utils";
 import {
@@ -18,9 +19,11 @@ import {
   useAuthorisation,
   useCardPayment,
   useValidatePayment,
+  useVerifyPaymentTransfer,
 } from "@library/hooks/queries/payments";
 import { useCheckoutContext } from "@library/context/checkout.provider";
 import { generatePaymentReference } from "@library/utils/ref";
+import { useQueryClient } from "@tanstack/react-query";
 
 type CardDetailType = {
   card: string;
@@ -33,23 +36,46 @@ export function PayCard() {
     reference: "",
     providerMessage: "",
     screen: "detail",
+    isDS: false,
   });
 
   const { makePayment, makingPayment } = useCardPayment({
     onSuccess(_val) {
-      if (_val.status === "pending_authorization") {
-        setPageState((prev) => ({
-          ...prev,
-          screen: "pin",
-          reference: _val.reference,
-        }));
-        if (onPaymentStatus) {
-          onPaymentStatus("ongoing");
-        }
-      }
       if (_val.status === "failed") {
         if (state.onErrorText) {
           state.onErrorText(_val?.providerMessage || "Payment Failed");
+        }
+        setPageState((prev) => ({
+          ...prev,
+          // screen: "pin",
+          reference: _val.reference,
+          isDS: false,
+        }));
+        return;
+      }
+      if (
+        _val.authorization?.mode === "3DS" &&
+        _val.status === "pending_validation"
+      ) {
+        setPageState((prev) => ({
+          ...prev,
+          screen: "waiting",
+          reference: _val.reference,
+          isDS: true,
+        }));
+        return window.open(_val?.authorization?.redirectUrl, "_blank'");
+      } else {
+        if (_val.status === "pending_authorization") {
+          setPageState((prev) => ({
+            ...prev,
+            screen: "pin",
+            reference: _val.reference,
+            isDS: false,
+          }));
+          if (onPaymentStatus) {
+            onPaymentStatus("ongoing");
+          }
+          return;
         }
       }
     },
@@ -128,49 +154,78 @@ export function PayCard() {
   };
   return (
     <div className=" grid gap-3">
-      <div
-        data-state={pageState.screen}
-        className={cn(" hidden data-[state=detail]:block")}
-      >
-        <BankDetailForm onSubmit={onCardPayment} loading={makingPayment} />
-      </div>
-      <div
-        data-state={pageState.screen}
-        className={cn(" hidden data-[state=pin]:block")}
-      >
-        <PinForm
-          onSubmit={(value) => {
-            if (value.length === 4) {
-              setTimeout(() => {
-                onAuthorisation(value);
-              }, 500);
-            }
-          }}
-          loading={authorisingPayment}
-        />
-      </div>
-      <div
-        data-state={pageState.screen}
-        className={cn(" hidden data-[state=otp]:block")}
-      >
-        <OtpForm
-          onSubmit={onValidate}
-          message={pageState.providerMessage}
-          loading={validatingPayment}
-        />
-      </div>
-      <div
-        data-state={pageState.screen}
-        className={cn(" hidden data-[state=warning]:block")}
-      >
-        <WarningView />
-      </div>
-      <div
-        data-state={pageState.screen}
-        className={cn(" hidden data-[state=success]:block")}
-      >
-        <SuccessView />
-      </div>
+      {pageState.screen === "pin" ? (
+        <div
+          data-state={pageState.screen}
+          className={cn(" hidden data-[state=pin]:block")}
+        >
+          <PinForm
+            onSubmit={(value) => {
+              if (value.length === 4) {
+                setTimeout(() => {
+                  onAuthorisation(value);
+                }, 500);
+              }
+            }}
+            loading={authorisingPayment}
+          />
+        </div>
+      ) : pageState.screen === "otp" ? (
+        <div
+          data-state={pageState.screen}
+          className={cn(" hidden data-[state=otp]:block")}
+        >
+          <OtpForm
+            onSubmit={onValidate}
+            message={pageState.providerMessage}
+            loading={validatingPayment}
+          />
+        </div>
+      ) : pageState.screen === "warning" ? (
+        <div
+          data-state={pageState.screen}
+          className={cn(" hidden data-[state=warning]:block")}
+        >
+          <WarningView
+            onCard={() => {
+              setPageState((prev) => ({
+                ...prev,
+                screen: "detail",
+              }));
+            }}
+          />
+        </div>
+      ) : pageState.screen === "success" ? (
+        <div
+          data-state={pageState.screen}
+          className={cn(" hidden data-[state=success]:block")}
+        >
+          <SuccessView />
+        </div>
+      ) : pageState.screen === "waiting" ? (
+        <div
+          data-state={pageState.screen}
+          className={cn(" hidden data-[state=waiting]:block")}
+        >
+          <Waiting
+            reference={pageState.reference}
+            onSuccess={() => {
+              setPageState((prev) => ({
+                ...prev,
+                screen: "success",
+              }));
+            }}
+            isDS={pageState.isDS}
+          />
+        </div>
+      ) : (
+        <div
+          data-state={pageState.screen}
+          className={cn(" hidden data-[state=detail]:block")}
+        >
+          <BankDetailForm onSubmit={onCardPayment} loading={makingPayment} />
+        </div>
+      )}
     </div>
   );
 }
@@ -309,9 +364,15 @@ type OtpFormProps = {
   message?: string;
 };
 const OtpForm = (props: OtpFormProps) => {
-  const { formatted } = useTimer(360);
+  const { formatted } = useTimer(360, true);
   const [otp, setOtp] = React.useState("");
-  return (
+  // const [view, setView] = React.useState(true);
+  return props.loading ? (
+    <div className=" grid place-items-center gap-4">
+      <img src={loaderGif} alt="" className=" w-7 h-7" />
+      <p></p>
+    </div>
+  ) : (
     <div className=" grid gap-6">
       <p className=" mx-auto max-w-[15rem] text-center">
         {props.message || " Kindly enter the OTP sent to 234249***3875"}
@@ -321,9 +382,9 @@ const OtpForm = (props: OtpFormProps) => {
           e.preventDefault();
           if (props.loading) return;
           if (otp.length < 4) return;
-          props.onSubmit(otp);
+          props.onSubmit(clearNumber(otp));
         }}
-        className=" flex gap-4 justify-center "
+        className=" flex flex-col lg:flex-row gap-4 justify-center "
       >
         <Input
           type="text"
@@ -333,14 +394,16 @@ const OtpForm = (props: OtpFormProps) => {
           max={6}
           value={otp}
           onChange={(e) => {
-            setOtp(clearNumber(e.target.value));
+            const values = e.target.value;
+            if (values.length > 6) return;
+            setOtp(clearNumber(e.target.value).trim());
           }}
           pattern="\d*"
           label
         />
         <button
           type="submit"
-          className="bg-[#32BB78] py-4 px-5 rounded-lg text-white"
+          className="bg-[#32BB78] py-4 px-5 self-center min-w-[150px] lg:min-w-max rounded-lg text-white"
         >
           Authorize
         </button>
@@ -360,20 +423,23 @@ const OtpForm = (props: OtpFormProps) => {
   );
 };
 
-const WarningView = () => {
+type WarningViewProps = {
+  onCard?: () => void;
+};
+const WarningView = (props: WarningViewProps) => {
   const { state } = useCheckoutContext();
   return (
     <div className=" grid gap-8">
       <div className=" max-w-[400px] w-full mx-auto">
         <WarningIcon className=" mx-auto" />
-        <h3 className="text-[#55515B] text-center text-xl font-semibold">
+        <h3 className="text-[#55515B] text-center text-base mx-auto max-w-[200px] lg:max-w-max lg:text-xl font-semibold">
           Incorrect otp. please retry with the correct otp
         </h3>
       </div>
       <div className=" grid gap-4">
         <Button
           onClick={() => {
-            state.onPaymentScreen("card");
+            if (props.onCard) props.onCard();
           }}
           className="border-[#C0B5CF] border bg-white text-[#55515B]"
         >
@@ -413,6 +479,38 @@ const SuccessView = () => {
       >
         Close
       </Button>
+    </div>
+  );
+};
+type WaitingProps = {
+  isDS?: boolean;
+  isDsSucceeded?: boolean;
+  reference?: string;
+  onSuccess?: () => void;
+};
+const Waiting = (props: WaitingProps) => {
+  const queryClient = useQueryClient();
+  const { config } = useCheckoutContext();
+  const { payment } = useVerifyPaymentTransfer({
+    merchantKey: config.merchantKey,
+    enabler: !!props.reference && !!props.isDS,
+    reference: props.reference || "",
+    interval: 17000,
+  });
+
+  React.useEffect(() => {
+    if (payment?.status === "successful") {
+      queryClient.cancelQueries({ queryKey: ["useVerifyPaymentTransfer"] });
+      props.onSuccess && props.onSuccess();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [payment?.status]);
+
+  return (
+    <div className=" grid place-items-center gap-4">
+      <img src={loaderGif} alt="" className=" w-7 h-7" />
+      <p>Please wait while we process your payment...</p>
     </div>
   );
 };

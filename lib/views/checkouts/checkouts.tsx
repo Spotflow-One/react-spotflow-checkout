@@ -64,27 +64,25 @@ type PaymentOptionsProps = {
 };
 const PaymentOptions = (props: PaymentOptionsProps) => {
   return (
-    <div>
-      <div className="grid grid-rows-[80px_1fr] gap-4">
-        <h3 className=" text-xs text-[#9E9BA1]">
-          Use one of the payment methods below to pay NGN500,000,000 to Spotflow
+    <div className="grid grid-rows-[80px_1fr] gap-4">
+      <h3 className=" text-xs text-[#9E9BA1]">
+        Use one of the payment methods below to pay NGN500,000,000 to Spotflow
+      </h3>
+      <div>
+        <h3 className=" font-semibold text-[#6D6A73] leading-10 border-b-[0.5px] border-b-[#E6E6E7]">
+          PAYMENT OPTIONS
         </h3>
-        <div>
-          <h3 className=" font-semibold text-[#6D6A73] leading-10 border-b-[0.5px] border-b-[#E6E6E7]">
-            PAYMENT OPTIONS
-          </h3>
-          <div className=" flex flex-col gap-1">
-            {sidebarDataLinkList.map((field) => (
-              <SidebarLink
-                key={field.value}
-                value={""}
-                data={field}
-                onClick={() => {
-                  props.onClick(field.value);
-                }}
-              />
-            ))}
-          </div>
+        <div className=" flex flex-col gap-1">
+          {sidebarDataLinkList.map((field) => (
+            <SidebarLink
+              key={field.value}
+              value={""}
+              data={field}
+              onClick={() => {
+                props.onClick(field.value);
+              }}
+            />
+          ))}
         </div>
       </div>
     </div>
