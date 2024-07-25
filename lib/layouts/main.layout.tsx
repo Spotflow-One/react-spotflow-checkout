@@ -34,13 +34,13 @@ export function MainLayout(props: Props) {
   const { state } = useCheckoutContext();
 
   return (
-    <div className=" relative h-screen lg:h-auto lg:min-h-[50dvh] ">
-      <div className="lg:shadow-lg rounded-lg bg-white grid min-h-[400px] h-full grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[800px] mx-auto  ">
+    <div className=" relative h-screen lg:h-full lg:max-h-[70dvh] ">
+      <div className="lg:shadow-lg rounded-lg bg-white grid min-h-[400px] h-full grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[390px] lg:max-w-[750px] mx-auto">
         <Sidebar onClick={props.onChange} />{" "}
         <main
           className={cn(
-            "  grid gap-4 px-3 md:px-6 pt-2 pb-2 overflow-y-auto max-h-[calc(100dvh_-_80px)] lg:max-h-[calc(100%_-_40px)] hide-scrollbar",
-            state.paymentScreen === "options" && "grid-rows-1",
+            "  grid gap-4 px-3 md:px-6 pt-2 pb-2 overflow-y-auto grid-rows-[auto_1fr] hide-scrollbar",
+            state.paymentScreen === "options" && "grid-rows-[auto_1fr]",
           )}
         >
           <div>
@@ -52,7 +52,7 @@ export function MainLayout(props: Props) {
 
             <TopContainer />
           </div>
-          <div className="grid gap-4 overflow-y-auto max-h-max hide-scrollbar">
+          <div className="grid gap-4 grid-rows-[1fr_auto] overflow-y-auto max-h-max hide-scrollbar">
             <div>
               {state.errorText && (
                 <p className=" bg-red-500 text-center p-1 rounded-lg px-2 text-white">
@@ -73,6 +73,9 @@ export function MainLayout(props: Props) {
                   <Button
                     onClick={() => {
                       state.onPaymentScreen("options");
+                      if (state.onErrorText) {
+                        state.onErrorText("");
+                      }
                     }}
                     className="border-[#E6E6E7] px-1 border-[0.5px] w-auto flex-1 text-xs whitespace-nowrap py-1 items-center bg-white text-[#55515B]"
                   >

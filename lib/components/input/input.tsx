@@ -35,7 +35,7 @@ export function Input(props: Props) {
           id={id || name}
           name={name}
           type={rest.type || "text"}
-          className={cn(" outline-none w-full px-1", className)}
+          className={cn(" outline-none w-full px-1 text-[#B6B4B9]", className)}
         />
         {endAdornment}
       </div>

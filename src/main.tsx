@@ -19,6 +19,13 @@ const PaymentConponents = () => {
   });
   return (
     <div>
+      {" "}
+      <iframe
+        width="560"
+        height="315"
+        src="https://react-spotflow-checkout-demo.netlify.app/"
+        title="GeeksforGeeks"
+      ></iframe>
       <button
         type="button"
         onClick={() => {

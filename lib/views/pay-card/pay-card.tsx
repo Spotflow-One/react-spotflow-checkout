@@ -12,7 +12,7 @@ import {
   formatCVC,
   formatExpirationDate,
   unFormatCreditCardNumber,
-} from "@library/utils/creditCardInputs";
+} from "@library/utils/credit-card-inputs";
 import { cardValidator } from "./validator";
 import { useTimer } from "@library/hooks/use-timer";
 import {
@@ -24,6 +24,7 @@ import {
 import { useCheckoutContext } from "@library/context/checkout.provider";
 import { generatePaymentReference } from "@library/utils/ref";
 import { useQueryClient } from "@tanstack/react-query";
+import CardInput from "@library/components/input/card-input";
 
 type CardDetailType = {
   card: string;
@@ -287,7 +288,7 @@ const BankDetailForm = (props: BankDetailFormProps) => {
         }}
         className=" grid grid-cols-2 gap-4 gap-y-6"
       >
-        <Input
+        <CardInput
           className=" col-span-2"
           name="card"
           type="tel"
@@ -306,6 +307,7 @@ const BankDetailForm = (props: BankDetailFormProps) => {
           id="card-expiry"
           placeholder="MM / YY"
           onChange={handleInputChange}
+          maxLength={7}
         />
         <Input
           label="CVV"
@@ -315,6 +317,7 @@ const BankDetailForm = (props: BankDetailFormProps) => {
           inputMode="numeric"
           value={input.cvv}
           placeholder="123"
+          maxLength={3}
           onChange={handleInputChange}
         />
         <Button
@@ -344,7 +347,7 @@ const PinForm = (props: PinFormProps) => {
       <div className=" grid gap-3">
         <OtpInput
           FormDivContainer={{ className: " max-w-[400px] w-full mx-auto" }}
-          inputType="tel"
+          inputType="number"
           numInputs={4}
           onChange={(e) => {
             if (e.length === 4) props.onSubmit(e);
