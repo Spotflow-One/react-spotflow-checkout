@@ -3,6 +3,8 @@ import {
   AuthorizeCardPaymentRequest,
   CardPaymentRequest,
   GetMerchantKeysResponse,
+  GetPaymentRateRequest,
+  GetPaymentRateResponseData,
   PaymentResponseData,
   Prettify,
   TransferPaymentRequest,
@@ -243,35 +245,33 @@ export const useGetMerchantKeys = (props: UseGetMerchantKeysProps) => {
   };
 };
 
-type UseGetPaymentRateProps = {
+type UseGetPaymentRateProps = GetPaymentRateRequest & {
   enabler?: boolean;
-  to: string; // ISO 4217 currency code (e.g., EUR, USD)
-  from?: string; // ISO 4217 currency code (e.g., EUR, USD)
   merchantKeys?: string;
 };
 
 export const useGetPaymentRate = (props: UseGetPaymentRateProps) => {
-  const { enabler, to, from, merchantKeys } = props;
+  const { enabler, merchantKeys, params } = props;
   const { data, isFetching, isError, isSuccess, error, refetch } = useQuery({
-    queryKey: ["useGetPaymentRate"],
+    queryKey: ["useGetPaymentRate", { params }],
     queryFn: () =>
-      getRequestParams({
+      getRequestParams<
+        GetPaymentRateRequest["params"],
+        GetPaymentRateResponseData
+      >({
         url: "payments/rates",
         config: {
           headers: {
             Authorization: `Bearer ${merchantKeys || ""}`,
           },
         },
-        params: {
-          "request.to": to,
-          "request.from": from,
-        },
+        params,
       }),
     enabled: !!enabler,
   });
 
   return {
-    paymentRate: data || {},
+    paymentRate: data,
     fetchingPaymentRate: isFetching,
     error,
     isSuccess,

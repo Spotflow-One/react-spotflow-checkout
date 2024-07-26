@@ -33,7 +33,7 @@ export default function CardInput(props: Props) {
       value={value}
       type="tel"
       inputMode="numeric"
-      placeholder="Card Number"
+      placeholder="0000 0000 0000 0000"
       maxLength={19}
       // pattern="\d*"
       endAdornment={<>{iconStg ? <img src={iconStg} alt="" /> : null}</>}
