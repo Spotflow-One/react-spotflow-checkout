@@ -1,7 +1,7 @@
 name: Publish to NPM
 on:
   push:
-    branches: [main]
+    branches: [publish-pipeline]
 jobs:
   build:
     runs-on: ubuntu-latest
