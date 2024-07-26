@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies and build 🔧
         run:  |
           if [ -e yarn.lock ]; then
-          yarn install --frozen-lockfile && yarn build
+          yarn install && yarn build
           elif [ -e package-lock.json ]; then
           npm ci && npm run build
           else
