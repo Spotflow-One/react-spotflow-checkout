@@ -148,7 +148,7 @@ type TransferDetailProps = {
 
 const TransferDetail = (props: TransferDetailProps) => {
   const { state, config } = useCheckoutContext();
-  const defaultTime = 589;
+  const defaultTime = 1800;
   const [timeLeft, setTimeLeft] = React.useState(defaultTime);
 
   React.useEffect(() => {

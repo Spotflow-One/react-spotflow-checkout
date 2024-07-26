@@ -92,10 +92,10 @@ type SidebarLinkProps = {
   onClick(): void;
 };
 export const SidebarLink = (props: SidebarLinkProps) => {
-  const { state } = useCheckoutContext();
+  // const { state } = useCheckoutContext();
   return (
     <button
-      disabled={state.paymentStatus === "ongoing"}
+      // disabled={state.paymentStatus === "ongoing"}
       type="button"
       data-app-active={props.data.value === props.value}
       className={cn(
