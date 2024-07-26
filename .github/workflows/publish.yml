@@ -14,7 +14,14 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies and build 🔧
-        run: npm ci && npm run build
+        run:  |
+          if [ -e yarn.lock ]; then
+          yarn install --frozen-lockfile && yarn build
+          elif [ -e package-lock.json ]; then
+          npm ci && npm run build
+          else
+          npm i
+          fi
       - name: Publish package on NPM 📦
         run: npm publish
         env:
