@@ -117,3 +117,16 @@ export type GetMerchantKeysResponseData = {
 };
 
 export type GetMerchantKeysResponse = Array<GetMerchantKeysResponseData>;
+
+export type GetPaymentRateParams = {
+  to: string; // ISO 4217 currency code (e.g., EUR, USD)
+  from: string; // ISO 4217 currency code (e.g., EUR
+};
+
+export type GetPaymentRateRequest = BaseApiParams<GetPaymentRateParams>;
+
+export type GetPaymentRateResponseData = {
+  from: string;
+  to: string;
+  rate: number;
+};

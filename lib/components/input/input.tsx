@@ -21,7 +21,7 @@ export function Input(props: Props) {
   return (
     <div
       className={cn(
-        " rounded-lg py-2 px-4 border border-[#CECDD0]",
+        " rounded-lg py-1 px-4 border border-[#CECDD0]",
         DivContainer?.className,
       )}
     >
@@ -35,7 +35,10 @@ export function Input(props: Props) {
           id={id || name}
           name={name}
           type={rest.type || "text"}
-          className={cn(" outline-none w-full px-1 text-[#B6B4B9]", className)}
+          className={cn(
+            " outline-none w-full pr-1 placeholder:text-xs",
+            className,
+          )}
         />
         {endAdornment}
       </div>

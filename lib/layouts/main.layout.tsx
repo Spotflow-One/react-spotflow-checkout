@@ -8,6 +8,9 @@ import CertifiedIcon from "@library/assets/pci-dss-certified.svg?react";
 import { Button } from "@library/components/button/button";
 import { useCheckoutContext } from "@library/context/checkout.provider";
 import { cn } from "@library/utils/utils";
+import { useGetPaymentRate } from "@library/hooks/queries/payments";
+import InforIcon from "@library/assets/top-container-icon.svg?react";
+import { formatNumber } from "@library/utils/number-format";
 
 type Props = React.PropsWithChildren<{
   tab: string;
@@ -34,8 +37,8 @@ export function MainLayout(props: Props) {
   const { state } = useCheckoutContext();
 
   return (
-    <div className=" relative h-screen lg:h-full lg:max-h-[70dvh] ">
-      <div className="lg:shadow-lg rounded-lg bg-white grid min-h-[400px] h-full grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[390px] lg:max-w-[750px] mx-auto">
+    <div className=" relative max-[400px]:min-h-[600px] lg:h-full lg:max-h-[70dvh] ">
+      <div className="lg:shadow-lg relative rounded-lg bg-white grid min-h-[400px] h-full grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[390px] lg:max-w-[750px] mx-auto">
         <Sidebar onClick={props.onChange} />{" "}
         <main
           className={cn(
@@ -54,6 +57,15 @@ export function MainLayout(props: Props) {
           </div>
           <div className="grid gap-4 grid-rows-[1fr_auto] overflow-y-auto max-h-max hide-scrollbar">
             <div>
+              <button
+                type="button"
+                className=" absolute top-0 right-0 z-30 font-semibold cursor-pointer"
+                onClick={() => {
+                  state.onOpenChange(false);
+                }}
+              >
+                X
+              </button>
               {state.errorText && (
                 <p className=" bg-red-500 text-center p-1 rounded-lg px-2 text-white">
                   <ErrorIcon className=" inline mr-3 align-middle" />{" "}
@@ -103,7 +115,15 @@ export function MainLayout(props: Props) {
 }
 
 const TopContainer = () => {
-  const { config } = useCheckoutContext();
+  const { config, state } = useCheckoutContext();
+  const { paymentRate } = useGetPaymentRate({
+    enabler: state.open,
+    params: {
+      to: "USD",
+      from: config.currency || "USD",
+    },
+    merchantKeys: config.merchantKey,
+  });
   return (
     <div className=" bg-[#01008E] py-5 px-3 md:py-7 md:px-8 grid gap-4 grid-rows-[51px_1fr] rounded-xl text-white">
       <div className=" flex gap-4 items-center justify-between border-b border-b-white text-white leading-8">
@@ -111,7 +131,12 @@ const TopContainer = () => {
         <p className=" text-sm">{"Leagues Pass"}</p>
       </div>
       <div className=" flex self-start items-center gap-4 justify-between">
-        <h3 className=" flex items-center leading-10">USD 1 = NGN 1,483.98</h3>
+        <div className=" relative flex gap-1 items-center leading-10">
+          <span>
+            {`${paymentRate?.from || "USD"} 1 = ${paymentRate?.to || "NGN"} ${formatNumber(paymentRate?.rate || 0, 2)}`}{" "}
+          </span>
+          <InforComponent />
+        </div>
         <div>
           <h3>
             Pay{" "}
@@ -120,9 +145,34 @@ const TopContainer = () => {
             </span>
           </h3>
           <span className=" inline-block bg-[#32BB78] text-xs whitespace-nowrap py-1 px-3 rounded-sm">
-            NGN 22,244.86
+            NGN
+            {formatNumber((paymentRate?.rate || 1) * (config?.amount || 0), 2)}
           </span>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const InforComponent = () => {
+  return (
+    <div className="  group">
+      <InforIcon />
+      <div
+        className={cn(
+          "text-xs w-0 absolute transition-all duration-500 opacity-30 hidden rotate-45 left-0 top-5 z-30 text-[#98A2B3] hover:block bg-white p-3 rounded-lg lg:max-w-[20rem]",
+          "translate-x-[50%] min-w-[10rem] lg:min-w-[18rem] shadow",
+          "before:h-4 before:w-4 before:absolute before:-top-0 before:left-0 before:translate-x-[50%] before:-translate-y-1 before:bg-white before:rotate-45",
+          "group-hover:rotate-0 hover:rotate-0 hover:opacity-100 group-hover:block group-hover:w-full hover:w-full",
+        )}
+      >
+        <p className=" text-black font-medium">What is this?</p>
+        <span className=" text-xs">
+          This rate reflects the current exchange rate for converting United
+          States Dollars (USD) to Nigerian Naira (NGN). Please note that
+          exchange rates are subject to change and may vary slightly at the time
+          of the transaction.
+        </span>
       </div>
     </div>
   );
