@@ -465,23 +465,23 @@ const WarningView = (props: WarningViewProps) => {
 };
 
 const SuccessView = () => {
-  const { state } = useCheckoutContext();
+  // const { state } = useCheckoutContext();
   return (
     <div className=" grid gap-[50px] max-w-[300px] w-full mx-auto">
       <div className=" flex flex-col items-center gap-6">
         <TransferSuccess />
-        <p className=" text-[#55515B] text-xl font-semibold text-center">
+        <p className=" text-black text-sm text-center">
           Token generation/authorization successful
         </p>
       </div>
-      <Button
+      {/* <Button
         className="border-[#C0B5CF] border bg-white text-[#55515B]"
         onClick={() => {
           state.onOpenChange(false);
         }}
       >
         Close
-      </Button>
+      </Button> */}
     </div>
   );
 };
@@ -513,7 +513,9 @@ const Waiting = (props: WaitingProps) => {
   return (
     <div className=" grid place-items-center gap-4">
       <img src={loaderGif} alt="" className=" w-7 h-7" />
-      <p>Please wait while we process your payment...</p>
+      <p className=" text-center">
+        Please wait while we process your payment...
+      </p>
     </div>
   );
 };

@@ -109,7 +109,7 @@ export const SidebarLink = (props: SidebarLinkProps) => {
         data-app-active={props.data.value === props.value}
         className={cn(
           " fill-[#9E9BA1]",
-          " data-[app-active=true]:fill-white data-[app-active=true]:text-white",
+          " data-[app-active=true]:fill-white data-[app-active=true]:text-white font-semibold",
         )}
       />
       {props.data.label}

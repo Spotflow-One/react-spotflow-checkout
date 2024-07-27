@@ -131,8 +131,8 @@ const TopContainer = () => {
         <p className=" text-sm">{"Leagues Pass"}</p>
       </div>
       <div className=" flex self-start items-center gap-4 justify-between">
-        <div className=" relative flex gap-1 items-center leading-10">
-          <span>
+        <div className=" relative flex gap-1 items-center leading-10 flex-nowrap">
+          <span className=" whitespace-nowrap">
             {`${paymentRate?.from || "USD"} 1 = ${paymentRate?.to || "NGN"} ${formatNumber(paymentRate?.rate || 0, 2)}`}{" "}
           </span>
           <InforComponent />

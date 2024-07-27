@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --font-main: "Cera";
+    --font-main: "Proxima";
 
     font-family: var(--font-main), system-ui, Avenir, Helvetica, Arial,
       sans-serif;
@@ -64,27 +64,35 @@
 @font-face {
   font-family: "Proxima";
   font-weight: 400;
-  src: url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Regular.otf"),
-    url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Regular\ Italic.otf");
+  src:
+    local("Proxima"),
+    url("@library/assets/fonts/MarkSimonsonProximaNovaRegular.otf")
+      format("opentype");
 }
 /** */
 @font-face {
   font-family: "Proxima";
   font-weight: 600;
-  src: url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Semibold.otf"),
-    url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Semibold\ Italic.otf");
+  src:
+    local("Proxima"),
+    url("@library/assets/fonts/MarkSimonsonProximaNovaSemibold.otf")
+      format("opentype");
 }
 @font-face {
   font-family: "Proxima";
   font-weight: 700;
-  src: url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Bold.otf"),
-    url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Bold\ Italic.otf");
+  src:
+    local("Proxima"),
+    url("@library/assets/fonts/MarkSimonsonProximaNovaBold.otf")
+      format("opentype");
 }
 @font-face {
   font-family: "Proxima";
   font-weight: 300;
-  src: url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Thin.otf"),
-    url("./assets/fonts/Mark\ Simonson\ \ Proxima\ Nova\ Thin\ Italic.otf");
+  src:
+    local("Proxima"),
+    url("@library/assets/fonts/MarkSimonsonProximaNovaThin.otf")
+      format("opentype");
 }
 
 blockquote,
