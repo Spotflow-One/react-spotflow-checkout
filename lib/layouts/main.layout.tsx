@@ -34,11 +34,11 @@ const TextObject = {
 export function MainLayout(props: Props) {
   const Icon = IconObject[props.tab as unknown as keyof typeof IconObject];
   const Text = TextObject[props.tab as unknown as keyof typeof TextObject];
-  const { state } = useCheckoutContext();
+  const { state, onOpenChange, setState } = useCheckoutContext();
 
   return (
     <div className=" relative max-[400px]:min-h-[600px] lg:h-full lg:max-h-[70dvh] ">
-      <div className="lg:shadow-lg relative rounded-lg bg-white grid min-h-[400px] h-full grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[390px] lg:max-w-[750px] mx-auto">
+      <div className="lg:shadow-2xl relative rounded-lg bg-white grid min-h-[400px] h-full grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[390px] lg:max-w-[750px] mx-auto">
         <Sidebar onClick={props.onChange} />{" "}
         <main
           className={cn(
@@ -48,7 +48,7 @@ export function MainLayout(props: Props) {
         >
           <div>
             {state.paymentScreen !== "options" && (
-              <div className=" flex lg:hidden gap-4 font-semibold text-[#3D3844]">
+              <div className=" flex lg:hidden gap-4 font-semibold py-4 text-[#3D3844]">
                 <Icon className=" fill-[#9E9BA1]" /> {Text}
               </div>
             )}
@@ -59,9 +59,11 @@ export function MainLayout(props: Props) {
             <div>
               <button
                 type="button"
-                className=" absolute top-0 right-0 z-30 font-semibold cursor-pointer"
+                className=" absolute -top-4 -right-4 z-30 font-semibold cursor-pointer"
                 onClick={() => {
-                  state.onOpenChange(false);
+                  if (onOpenChange) {
+                    onOpenChange(false);
+                  }
                 }}
               >
                 X
@@ -74,7 +76,7 @@ export function MainLayout(props: Props) {
               )}
               {props.children}
             </div>
-            <div className=" grid grid-rows-[repeat(2,_auto)] gap-4">
+            <div className=" grid grid-rows-[repeat(2,_auto)] gap-10">
               <div
                 className={cn(
                   " flex lg:hidden gap-4",
@@ -84,10 +86,11 @@ export function MainLayout(props: Props) {
                 {state.paymentScreen !== "options" && (
                   <Button
                     onClick={() => {
-                      state.onPaymentScreen("options");
-                      if (state.onErrorText) {
-                        state.onErrorText("");
-                      }
+                      setState((prev) => ({
+                        ...prev,
+                        errorText: "",
+                        paymentScreen: "options",
+                      }));
                     }}
                     className="border-[#E6E6E7] px-1 border-[0.5px] w-auto flex-1 text-xs whitespace-nowrap py-1 items-center bg-white text-[#55515B]"
                   >
@@ -96,7 +99,9 @@ export function MainLayout(props: Props) {
                 )}
                 <Button
                   onClick={() => {
-                    state.onOpenChange(false);
+                    if (onOpenChange) {
+                      onOpenChange(false);
+                    }
                   }}
                   className="border-[#E6E6E7]  w-auto  text-xs px-2 border-[0.5px] flex-1 items-center bg-white text-[#55515B]"
                 >
@@ -125,27 +130,27 @@ const TopContainer = () => {
     merchantKeys: config.merchantKey,
   });
   return (
-    <div className=" bg-[#01008E] py-5 px-3 md:py-7 md:px-8 grid gap-4 grid-rows-[51px_1fr] rounded-xl text-white">
+    <div className=" bg-[#01008E] py-5 px-3 md:py-4 md:px-8 grid gap-4 grid-rows-[51px_1fr] rounded-xl text-white">
       <div className=" flex gap-4 items-center justify-between border-b border-b-white text-white leading-8">
         <p className=" text-sm whitespace-nowrap">{config?.email}</p>
         <p className=" text-sm">{"Leagues Pass"}</p>
       </div>
       <div className=" flex self-start items-center gap-4 justify-between">
-        <div className=" relative flex gap-1 items-center leading-10 flex-nowrap">
+        <div className=" relative flex gap-1 items-center leading-10 text-sm">
           <span className=" whitespace-nowrap">
             {`${paymentRate?.from || "USD"} 1 = ${paymentRate?.to || "NGN"} ${formatNumber(paymentRate?.rate || 0, 2)}`}{" "}
           </span>
           <InforComponent />
         </div>
         <div>
-          <h3>
+          <h3 className=" text-right">
             Pay{" "}
             <span className=" font-semibold">
-              {config?.currency} {config?.amount}
+              {config?.currency} {config?.amount || 0}
             </span>
           </h3>
-          <span className=" inline-block bg-[#32BB78] text-xs whitespace-nowrap py-1 px-3 rounded-sm">
-            NGN
+          <span className=" inline-block bg-[#32BB78] text-xs whitespace-nowrap p-[3px_10px] rounded">
+            NGN{" "}
             {formatNumber((paymentRate?.rate || 1) * (config?.amount || 0), 2)}
           </span>
         </div>

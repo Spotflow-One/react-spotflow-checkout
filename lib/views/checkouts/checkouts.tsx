@@ -9,7 +9,7 @@ import React from "react";
 
 type ScreenType = "card" | "ussd" | "transfer" | "options";
 export function Checkouts() {
-  const { state } = useCheckoutContext();
+  const { state, setState } = useCheckoutContext();
 
   React.useEffect(() => {
     const handleBeforeUnload = (evt: BeforeUnloadEvent) => {
@@ -23,7 +23,10 @@ export function Checkouts() {
     <MainLayout
       tab={state.paymentScreen}
       onChange={(values) => {
-        state.onPaymentScreen(values as ScreenType);
+        setState((prev) => ({
+          ...prev,
+          paymentScreen: values as ScreenType,
+        }));
       }}
     >
       {state.paymentScreen === "options" ? (
@@ -31,7 +34,14 @@ export function Checkouts() {
           data-state={state.paymentScreen}
           className="hidden data-[state=options]:grid"
         >
-          <PaymentOptions onClick={state.onPaymentScreen} />
+          <PaymentOptions
+            onClick={(val) => {
+              setState((prev) => ({
+                ...prev,
+                paymentScreen: val as ScreenType,
+              }));
+            }}
+          />
         </div>
       ) : state.paymentScreen === "ussd" ? (
         <div

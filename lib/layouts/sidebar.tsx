@@ -15,24 +15,31 @@ type Props = {
 
 export default function Sidebar(props: Props) {
   const [value, setValue] = useState(sidebarDataLinkList[0].value);
-  const { state, config } = useCheckoutContext();
+  const { config, setState, onLoading } = useCheckoutContext();
 
   const { transferPayment, transferringPayment } = usePaymentTransfer({
     onSuccess(_val) {
-      state.onLoading(false);
+      if (onLoading) {
+        onLoading(false);
+      }
       if (_val.status === "failed") {
-        if (state.onErrorText) {
-          state.onErrorText(_val?.providerMessage || "Payment Failed");
-        }
+        setState((prev) => ({
+          ...prev,
+          errorText: _val.providerMessage || "Payment Failed",
+        }));
         return;
       }
-      state.onPaymentResponse(_val);
+      setState((prev) => ({
+        ...prev,
+        payment: _val,
+      }));
     },
     reference: config.merchantKey,
     onError(_val) {
-      if (state.onErrorText) {
-        state.onErrorText(_val || "Payment Failed");
-      }
+      setState((prev) => ({
+        ...prev,
+        errorText: _val || "Payment Failed",
+      }));
     },
   });
 
@@ -67,17 +74,19 @@ export default function Sidebar(props: Props) {
                       // planId: config.plan,
                     },
                   });
-                  state.onLoading(transferringPayment);
-                  if (state.onErrorText) {
-                    state.onErrorText("");
-                  }
+                  setState((prev) => ({
+                    ...prev,
+                    errorText: "",
+                    loading: transferringPayment,
+                  }));
                 }
               }
               setValue(field.value);
               props.onClick(field.value);
-              if (state.onErrorText) {
-                state.onErrorText("");
-              }
+              setState((prev) => ({
+                ...prev,
+                errorText: "",
+              }));
             }}
           />
         ))}
@@ -99,7 +108,7 @@ export const SidebarLink = (props: SidebarLinkProps) => {
       type="button"
       data-app-active={props.data.value === props.value}
       className={cn(
-        " flex items-center gap-1 px-3 rounded-xl py-4 outline-none",
+        " flex items-center gap-1 px-3 rounded-xl py-3 outline-none",
         " text-[#3D3844] font-semibold",
         "data-[app-active=true]:bg-[#01008E] data-[app-active=true]:text-white",
       )}
