@@ -213,7 +213,7 @@ const ControlledSelect = (props: ControlledSelectProps) => {
 };
 
 const SuccessView = () => {
-  const { state } = useCheckoutContext();
+  const { onOpenChange } = useCheckoutContext();
   return (
     <div className=" grid gap-[50px] max-w-[300px] w-full mx-auto">
       <div className=" flex flex-col items-center gap-6">
@@ -225,7 +225,9 @@ const SuccessView = () => {
       <Button
         className="border-[#C0B5CF] border bg-white text-[#55515B]"
         onClick={() => {
-          state.onOpenChange(false);
+          if (onOpenChange) {
+            onOpenChange(false);
+          }
         }}
       >
         Close
@@ -235,7 +237,7 @@ const SuccessView = () => {
 };
 
 const WarningView = () => {
-  const { state } = useCheckoutContext();
+  const { setState } = useCheckoutContext();
   return (
     <div className=" grid gap-8">
       <div className=" max-w-[400px] w-full mx-auto">
@@ -247,7 +249,10 @@ const WarningView = () => {
       <div className=" grid gap-4">
         <Button
           onClick={() => {
-            state.onPaymentScreen("card");
+            setState((prev) => ({
+              ...prev,
+              paymentScreen: "card",
+            }));
           }}
           className="border-[#C0B5CF] border bg-white text-[#55515B]"
         >
@@ -255,7 +260,10 @@ const WarningView = () => {
         </Button>
         <Button
           onClick={() => {
-            state.onPaymentScreen("transfer");
+            setState((prev) => ({
+              ...prev,
+              paymentScreen: "transfer",
+            }));
           }}
           className="border-[#C0B5CF] border bg-white text-[#55515B]"
         >

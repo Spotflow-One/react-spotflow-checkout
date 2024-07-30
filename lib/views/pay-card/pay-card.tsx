@@ -32,7 +32,8 @@ type CardDetailType = {
   expiry: string;
 };
 export function PayCard() {
-  const { state, config, onPaymentStatus } = useCheckoutContext();
+  const { config, setState } = useCheckoutContext();
+
   const [pageState, setPageState] = React.useState({
     reference: "",
     providerMessage: "",
@@ -43,9 +44,10 @@ export function PayCard() {
   const { makePayment, makingPayment } = useCardPayment({
     onSuccess(_val) {
       if (_val.status === "failed") {
-        if (state.onErrorText) {
-          state.onErrorText(_val?.providerMessage || "Payment Failed");
-        }
+        setState((prev) => ({
+          ...prev,
+          errorText: _val?.providerMessage || "Payment Failed",
+        }));
         setPageState((prev) => ({
           ...prev,
           // screen: "pin",
@@ -73,9 +75,7 @@ export function PayCard() {
             reference: _val.reference,
             isDS: false,
           }));
-          if (onPaymentStatus) {
-            onPaymentStatus("ongoing");
-          }
+          setState((prev) => ({ ...prev, paymentStatus: "ongoing" }));
           return;
         }
       }
@@ -242,7 +242,7 @@ const BankDetailForm = (props: BankDetailFormProps) => {
     expiry: "",
     validator: false,
   });
-  const { state, config } = useCheckoutContext();
+  const { config, setState } = useCheckoutContext();
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -282,9 +282,10 @@ const BankDetailForm = (props: BankDetailFormProps) => {
               expiry: input.expiry,
             });
           }
-          if (state.onErrorText) {
-            state.onErrorText("");
-          }
+          setState((prev) => ({
+            ...prev,
+            errorText: "",
+          }));
         }}
         className=" grid grid-cols-2 gap-4 gap-y-6"
       >
@@ -347,7 +348,7 @@ const PinForm = (props: PinFormProps) => {
       <div className=" grid gap-3">
         <OtpInput
           FormDivContainer={{ className: " max-w-[400px] w-full mx-auto" }}
-          inputType="number"
+          inputType="tel"
           numInputs={4}
           onChange={(e) => {
             if (e.length === 4) props.onSubmit(e);
@@ -390,8 +391,8 @@ const OtpForm = (props: OtpFormProps) => {
         className=" flex flex-col lg:flex-row gap-4 justify-center "
       >
         <Input
-          type="text"
-          inputMode="numeric"
+          type="tel"
+          inputMode="tel"
           required
           name="otp"
           max={6}
@@ -430,7 +431,7 @@ type WarningViewProps = {
   onCard?: () => void;
 };
 const WarningView = (props: WarningViewProps) => {
-  const { state } = useCheckoutContext();
+  const { setState } = useCheckoutContext();
   return (
     <div className=" grid gap-8">
       <div className=" max-w-[400px] w-full mx-auto">
@@ -450,7 +451,10 @@ const WarningView = (props: WarningViewProps) => {
         </Button>
         <Button
           onClick={() => {
-            state.onPaymentScreen("transfer");
+            setState((prev) => ({
+              ...prev,
+              paymentScreen: "transfer",
+            }));
           }}
           className="border-[#C0B5CF] border bg-white text-[#55515B]"
         >
@@ -465,23 +469,23 @@ const WarningView = (props: WarningViewProps) => {
 };
 
 const SuccessView = () => {
-  const { state } = useCheckoutContext();
+  // const { state } = useCheckoutContext();
   return (
     <div className=" grid gap-[50px] max-w-[300px] w-full mx-auto">
       <div className=" flex flex-col items-center gap-6">
         <TransferSuccess />
-        <p className=" text-[#55515B] text-xl font-semibold text-center">
+        <p className=" text-black text-sm text-center">
           Token generation/authorization successful
         </p>
       </div>
-      <Button
+      {/* <Button
         className="border-[#C0B5CF] border bg-white text-[#55515B]"
         onClick={() => {
           state.onOpenChange(false);
         }}
       >
         Close
-      </Button>
+      </Button> */}
     </div>
   );
 };
@@ -513,7 +517,9 @@ const Waiting = (props: WaitingProps) => {
   return (
     <div className=" grid place-items-center gap-4">
       <img src={loaderGif} alt="" className=" w-7 h-7" />
-      <p>Please wait while we process your payment...</p>
+      <p className=" text-center">
+        Please wait while we process your payment...
+      </p>
     </div>
   );
 };

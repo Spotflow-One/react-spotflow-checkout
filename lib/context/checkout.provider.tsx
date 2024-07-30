@@ -1,5 +1,6 @@
+import { Button } from "@library/components/button/button";
 import { PaymentResponseData } from "@library/hooks/queries/types/payment.types";
-import { InitialiseConfig } from "@library/types";
+import { InitialiseConfig, ISetState } from "@library/types";
 import React from "react";
 
 type ScreenType = "card" | "ussd" | "transfer" | "options";
@@ -7,101 +8,118 @@ type ScreenType = "card" | "ussd" | "transfer" | "options";
 type StateType = {
   initialData?: InitialiseConfig;
   open: boolean;
-  onOpenChange(_val: boolean): void;
   paymentScreen: ScreenType;
-  onPaymentScreen(_val: ScreenType): void;
   errorText?: string;
-  onErrorText?: (_val: string) => void;
-  onDataUpdated(_val: InitialiseConfig): void;
   payment: PaymentResponseData | null;
-  onPaymentResponse(_val: PaymentResponseData): void;
   loading: boolean;
-  onLoading(_val: boolean): void;
   paymentStatus: string;
+  footer?: {
+    MethodButtonProps?: React.ComponentProps<typeof Button>;
+    CancelButtonProps?: React.ComponentProps<typeof Button>;
+  };
 };
+
+const initialState: StateType = {
+  open: false,
+  paymentScreen: "card",
+  payment: null,
+  loading: false,
+  paymentStatus: "",
+  errorText: "",
+};
+
 type CheckoutStateType = {
   state?: StateType;
   onOpenChange?: (_val: boolean) => void;
   onPaymentStatus?: (_val: string) => void;
+  setState?: ISetState<StateType>;
+  onPaymentScreen?: (_val: ScreenType) => void;
+  onLoading?: (_val: boolean) => void;
+  onPaymentResponse?: (_val: PaymentResponseData) => void;
+  onDataUpdated?: (_val: InitialiseConfig) => void;
+  onErrorText?: (_val: string) => void;
 };
 const CheckoutContext = React.createContext<CheckoutStateType>({});
 
 type CheckoutProviderProps = {
   data?: InitialiseConfig;
-  children?: (_val: StateType) => React.ReactElement | React.ReactElement;
+  children?: (
+    _val: StateType,
+    _bool: (_val: boolean) => void,
+  ) => React.ReactElement | React.ReactElement;
   open?: boolean;
   onOpenChange?: (_val: boolean) => void;
 };
 export function CheckoutProvider(props: CheckoutProviderProps) {
-  const [initialData, setInitialData] = React.useState<InitialiseConfig>({
-    ...props.data,
-  } as InitialiseConfig);
-  const [open, setOpen] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
-  const [paymentStatus, setPaymentStatus] = React.useState("");
-  const [errorText, setErrorText] = React.useState<string | undefined>("");
-  const [payment, setPayment] = React.useState<PaymentResponseData | null>(
-    null,
-  );
-  const [paymentScreen, setPaymentScreen] = React.useState<ScreenType>("card");
-  const onPaymentScreen = (values: ScreenType) => {
-    setPaymentScreen(values);
-  };
-  const state: StateType = React.useMemo(() => {
-    return {
-      open:
-        !!initialData &&
-        !!Object.values(initialData).length &&
-        (props.open || open),
-      onOpenChange(value) {
-        if (props.onOpenChange) {
-          props.onOpenChange(value);
-        } else {
-          setOpen(value);
-        }
-        if (!value) onPaymentScreen("card");
-      },
-      paymentScreen,
-      onPaymentScreen,
-      errorText,
-      onErrorText(_val) {
-        setErrorText(_val); //
-      },
-      onDataUpdated(_val) {
-        setInitialData(_val);
-      },
-      initialData,
-      payment, // replace with actual data
-      onPaymentResponse(_val) {
-        // replace with actual data
-        setPayment(_val);
-      },
-      loading,
-      onLoading: setLoading,
-      paymentStatus,
-    };
+  const [checkoutContext, setCheckoutContext] = React.useState({
+    ...initialState,
+    open: props.open || initialState.open,
+  });
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    props.data,
-    open,
-    props.open,
-    paymentScreen,
-    errorText,
-    payment,
-    paymentStatus,
-  ]);
+  const onPaymentScreen = (values: ScreenType) => {
+    setCheckoutContext((prev) => ({
+      ...prev,
+      paymentScreen: values,
+    }));
+  };
+
+  const onPaymentResponse = (values: PaymentResponseData) => {
+    setCheckoutContext((prev) => ({
+      ...prev,
+      payment: values,
+    }));
+  };
+
+  const onOpenChange = (values: boolean) => {
+    if (!values) {
+      setCheckoutContext(initialState);
+    } else {
+      setCheckoutContext((prev) => ({
+        ...prev,
+        open: values,
+      }));
+    }
+  };
+
+  const onDataUpdated = (values: InitialiseConfig) => {
+    setCheckoutContext((prev) => ({
+      ...prev,
+      initialData: values,
+    }));
+  };
+
+  const onPaymentStatus = (values: string) => {
+    setCheckoutContext((prev) => ({
+      ...prev,
+      paymentStatus: values,
+    }));
+  };
+
+  const onErrorText = (values: string) => {
+    setCheckoutContext((prev) => ({
+      ...prev,
+      errorText: values,
+    }));
+  };
 
   return (
     <CheckoutContext.Provider
       value={{
-        state,
-        onOpenChange: props.onOpenChange || setOpen,
-        onPaymentStatus: setPaymentStatus,
+        state: checkoutContext,
+        onOpenChange,
+        onPaymentStatus,
+        setState: setCheckoutContext,
+        onPaymentScreen,
+        onPaymentResponse,
+        onDataUpdated,
+        onErrorText,
+        onLoading(_val) {
+          setCheckoutContext((prev) => ({ ...prev, loading: _val }));
+        },
       }}
     >
       {typeof props.children === "function" ? (
-        props.children(state)
+        props.children(checkoutContext, onOpenChange)
       ) : (
         <> {props.children}</>
       )}
@@ -110,9 +128,20 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
 }
 
 export const useCheckoutContext = () => {
-  const { state, onOpenChange, onPaymentStatus } =
-    React.useContext(CheckoutContext);
+  const {
+    state,
+    onOpenChange,
+    onPaymentStatus,
+    onDataUpdated,
+    onErrorText,
+    onLoading,
+    onPaymentResponse,
+    onPaymentScreen,
+    setState,
+  } = React.useContext(CheckoutContext);
   if (!state) throw new Error("context is not available");
+  if (!setState) throw new Error("context is not available");
+
   // if (!state?.initialData)
   //   throw new Error("Initial Config Data is not provided");
 
@@ -121,5 +150,11 @@ export const useCheckoutContext = () => {
     onOpenChange,
     config: state.initialData as InitialiseConfig,
     onPaymentStatus,
+    onDataUpdated,
+    onErrorText,
+    onLoading,
+    onPaymentResponse,
+    onPaymentScreen,
+    setState,
   };
 };

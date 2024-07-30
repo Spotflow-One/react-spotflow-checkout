@@ -19,14 +19,14 @@ export function PaymentCheckoutButton(props: CheckoutPaymentProps) {
   const { data, actionText, ...rest } = props;
   return (
     <CheckoutProvider data={data}>
-      {(values) => {
+      {(values, onOpenChange) => {
         return (
           <React.Fragment>
             <button
               {...rest}
               type="button"
               onClick={() => {
-                values.onOpenChange(true);
+                onOpenChange(true);
               }}
             >
               {actionText || "Pay Amount"}

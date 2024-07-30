@@ -289,7 +289,7 @@ const TimerCard = (props: TimerCardProps) => {
 };
 
 const AccountExpiry = () => {
-  const { state } = useCheckoutContext();
+  const { state, setState } = useCheckoutContext();
   return (
     <div className=" grid gap-12">
       <div className=" grid place-items-center">
@@ -300,7 +300,12 @@ const AccountExpiry = () => {
         <Button
           className=" border border-[#C0B5CF] bg-white text-[#55515B]"
           onClick={() => {
-            state.onPaymentScreen("transfer");
+            setState((prev) => {
+              return {
+                ...prev,
+                paymentScreen: "transfer",
+              };
+            });
           }}
         >
           Try again
@@ -417,7 +422,7 @@ const WaitingView = (props: WaitingProps) => {
 };
 
 const SuccessView = () => {
-  const { state } = useCheckoutContext();
+  const { onOpenChange } = useCheckoutContext();
   return (
     <div className=" grid gap-[50px] max-w-[300px] w-full mx-auto">
       <div className=" flex flex-col items-center gap-6">
@@ -428,7 +433,9 @@ const SuccessView = () => {
       </div>
       <Button
         onClick={() => {
-          state.onOpenChange(false);
+          if (onOpenChange) {
+            onOpenChange(false);
+          }
         }}
         className="border-[#C0B5CF] border bg-white text-[#55515B]"
       >
