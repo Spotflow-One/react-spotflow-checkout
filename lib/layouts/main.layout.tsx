@@ -50,7 +50,7 @@ export function MainLayout(props: Props) {
           )}
         >
           {loadingRate ? (
-            <LoadingPage />
+            <LoadingPage text="Fetching payment rates...." />
           ) : (
             <>
               <div>

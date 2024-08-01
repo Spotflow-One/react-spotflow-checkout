@@ -7,8 +7,10 @@ function LoadingPage(props: Props) {
   return (
     <div className=" grid place-items-center gap-4 min-h-[16rem]">
       <div>
-        <img src={LoadingGif} alt="loading" />
-        <h4>{props?.text || "fetching..."}</h4>
+        <img src={LoadingGif} alt="loading" className=" mx-auto" />
+        <h4 className=" text-slate-800 text-sm">
+          {props?.text || "fetching..."}
+        </h4>
       </div>
     </div>
   );
