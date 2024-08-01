@@ -1,6 +1,6 @@
 {
   "name": "@spot-flow/react-spotflow-checkout",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "type": "module",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -46,6 +46,7 @@
     "react-otp-input": "^3.1.1",
     "react-select": "^5.8.0",
     "tailwind-merge": "^2.3.0",
+    "tailwindcss-scoped-preflight": "^3.4.3",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
