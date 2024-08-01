@@ -48,6 +48,7 @@ export default defineConfig({
           react: "React",
           "react-dom": "ReactDOM",
         },
+        sourcemap: true,
       },
     },
     // rollupOptions: {
