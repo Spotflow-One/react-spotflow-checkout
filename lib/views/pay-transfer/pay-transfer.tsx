@@ -38,11 +38,11 @@ export function PayTransfer() {
   const { payment } = useVerifyPaymentTransfer({
     enabler:
       !!state?.payment?.reference &&
-      state.paymentScreen === "transfer" &&
+      state?.paymentScreen === "transfer" &&
       transferState.screen === "wait",
     reference: state?.payment?.reference || "",
     interval: 17000,
-    merchantKey: config.merchantKey,
+    merchantKey: config?.merchantKey,
     isPollingEnabled: state.paymentScreen === "transfer",
   });
 

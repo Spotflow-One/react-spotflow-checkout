@@ -34,7 +34,7 @@ export default function Sidebar(props: Props) {
         payment: _val,
       }));
     },
-    reference: config.merchantKey,
+    reference: config?.merchantKey,
     onError(_val) {
       setState((prev) => ({
         ...prev,
@@ -64,11 +64,11 @@ export default function Sidebar(props: Props) {
                 if (config?.email) {
                   transferPayment({
                     payload: {
-                      amount: config.amount,
+                      amount: config?.amount,
                       channel: "bank_transfer",
-                      currency: config.currency || "USD",
+                      currency: config?.currency || "USD",
                       customer: {
-                        email: config.email,
+                        email: config?.email,
                       },
                       reference: config.reference || generatePaymentReference(),
                       // planId: config.plan,
@@ -108,7 +108,7 @@ export const SidebarLink = (props: SidebarLinkProps) => {
       type="button"
       data-app-active={props.data.value === props.value}
       className={cn(
-        " flex items-center gap-1 px-3 rounded-xl py-3 outline-none",
+        " flex group items-center gap-1 px-3 rounded-xl py-3 outline-none hover:bg-[#01008E] hover:text-white",
         " text-[#3D3844] font-semibold",
         "data-[app-active=true]:bg-[#01008E] data-[app-active=true]:text-white",
       )}
@@ -118,7 +118,7 @@ export const SidebarLink = (props: SidebarLinkProps) => {
         data-app-active={props.data.value === props.value}
         className={cn(
           " fill-[#9E9BA1]",
-          " data-[app-active=true]:fill-white data-[app-active=true]:text-white font-semibold",
+          " data-[app-active=true]:fill-white data-[app-active=true]:text-white font-semibold group-hover:fill-white",
         )}
       />
       {props.data.label}

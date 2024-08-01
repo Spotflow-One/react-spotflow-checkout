@@ -51,9 +51,10 @@ type CheckoutProviderProps = {
   onOpenChange?: (_val: boolean) => void;
 };
 export function CheckoutProvider(props: CheckoutProviderProps) {
-  const [checkoutContext, setCheckoutContext] = React.useState({
+  const [checkoutContext, setCheckoutContext] = React.useState<StateType>({
     ...initialState,
     open: props.open || initialState.open,
+    initialData: props?.data,
   });
 
   const onPaymentScreen = (values: ScreenType) => {
@@ -140,6 +141,7 @@ export const useCheckoutContext = () => {
     setState,
   } = React.useContext(CheckoutContext);
   if (!state) throw new Error("context is not available");
+  // if (!state?.initialData) throw new Error("context is not available");
   if (!setState) throw new Error("context is not available");
 
   // if (!state?.initialData)

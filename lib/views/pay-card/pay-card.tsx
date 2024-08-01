@@ -51,7 +51,7 @@ export function PayCard() {
         setPageState((prev) => ({
           ...prev,
           // screen: "pin",
-          reference: _val.reference,
+          reference: _val?.reference,
           isDS: false,
         }));
         return;
@@ -63,7 +63,7 @@ export function PayCard() {
         setPageState((prev) => ({
           ...prev,
           screen: "waiting",
-          reference: _val.reference,
+          reference: _val?.reference,
           isDS: true,
         }));
         return window.open(_val?.authorization?.redirectUrl, "_blank'");
@@ -72,7 +72,7 @@ export function PayCard() {
           setPageState((prev) => ({
             ...prev,
             screen: "pin",
-            reference: _val.reference,
+            reference: _val?.reference,
             isDS: false,
           }));
           setState((prev) => ({ ...prev, paymentStatus: "ongoing" }));
@@ -80,7 +80,7 @@ export function PayCard() {
         }
       }
     },
-    reference: config.merchantKey,
+    reference: config?.merchantKey,
   });
 
   const { validatePayment, validatingPayment } = useValidatePayment({
@@ -97,7 +97,7 @@ export function PayCard() {
         }));
       }
     },
-    reference: config.merchantKey,
+    reference: config?.merchantKey,
   });
 
   const onValidate = (val: string) => {
@@ -106,7 +106,7 @@ export function PayCard() {
         authorization: {
           otp: val,
         },
-        reference: pageState.reference,
+        reference: pageState?.reference,
       },
     });
   };
@@ -120,7 +120,7 @@ export function PayCard() {
           _val?.providerMessage || "Enter the OTP sent to your phone",
       }));
     },
-    reference: config.merchantKey,
+    reference: config?.merchantKey,
   });
 
   const onAuthorisation = (_val: string) => {
@@ -129,7 +129,7 @@ export function PayCard() {
         authorization: {
           pin: _val,
         },
-        reference: pageState.reference,
+        reference: pageState?.reference,
       },
     });
   };
@@ -137,11 +137,11 @@ export function PayCard() {
   const onCardPayment = (val: CardDetailType) => {
     makePayment({
       payload: {
-        amount: config.amount,
+        amount: config?.amount,
         channel: "card",
         currency: "USD",
         customer: {
-          email: config.email,
+          email: config?.email,
         },
         reference: generatePaymentReference(),
         card: {

@@ -20,12 +20,12 @@ const PaymentConponents = () => {
   return (
     <div>
       {" "}
-      <iframe
+      {/* <iframe
         width="560"
         height="315"
         src="https://react-spotflow-checkout-demo.netlify.app/"
         title="GeeksforGeeks"
-      ></iframe>
+      ></iframe> */}
       <button
         type="button"
         onClick={() => {
