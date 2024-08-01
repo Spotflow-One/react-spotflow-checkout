@@ -59,7 +59,7 @@ export function MainLayout(props: Props) {
             <div>
               <button
                 type="button"
-                className=" absolute -top-4 -right-4 z-30 font-semibold cursor-pointer"
+                className=" absolute -top-4 -right-4 z-30 hover:bg-purple-900 hover:text-white h-4 text-xs w-4 rounded-full font-semibold cursor-pointer"
                 onClick={() => {
                   if (onOpenChange) {
                     onOpenChange(false);
