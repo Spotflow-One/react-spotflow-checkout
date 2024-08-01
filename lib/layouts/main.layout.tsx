@@ -8,9 +8,9 @@ import CertifiedIcon from "@library/assets/pci-dss-certified.svg?react";
 import { Button } from "@library/components/button/button";
 import { useCheckoutContext } from "@library/context/checkout.provider";
 import { cn } from "@library/utils/utils";
-import { useGetPaymentRate } from "@library/hooks/queries/payments";
 import InforIcon from "@library/assets/top-container-icon.svg?react";
 import { formatNumber } from "@library/utils/number-format";
+import LoadingPage from "@library/views/shared/loading-page";
 
 type Props = React.PropsWithChildren<{
   tab: string;
@@ -34,7 +34,7 @@ const TextObject = {
 export function MainLayout(props: Props) {
   const Icon = IconObject[props.tab as unknown as keyof typeof IconObject];
   const Text = TextObject[props.tab as unknown as keyof typeof TextObject];
-  const { state, onOpenChange, setState } = useCheckoutContext();
+  const { state, onOpenChange, setState, loadingRate } = useCheckoutContext();
 
   return (
     <div
@@ -49,73 +49,79 @@ export function MainLayout(props: Props) {
             state.paymentScreen === "options" && "grid-rows-[auto_1fr]",
           )}
         >
-          <div>
-            {state.paymentScreen !== "options" && (
-              <div className=" flex lg:hidden gap-4 font-semibold py-4 text-[#3D3844]">
-                <Icon className=" fill-[#9E9BA1]" /> {Text}
-              </div>
-            )}
-
-            <TopContainer />
-          </div>
-          <div className="grid gap-4 grid-rows-[1fr_auto] overflow-y-auto max-h-max hide-scrollbar">
-            <div>
-              <button
-                type="button"
-                className=" absolute -top-4 -right-4 z-30 hover:bg-purple-900 hover:text-white h-4 text-xs w-4 rounded-full font-semibold cursor-pointer"
-                onClick={() => {
-                  if (onOpenChange) {
-                    onOpenChange(false);
-                  }
-                }}
-              >
-                X
-              </button>
-              {state.errorText && (
-                <p className=" bg-red-500 text-center p-1 rounded-lg px-2 text-white">
-                  <ErrorIcon className=" inline mr-3 align-middle" />{" "}
-                  {state?.errorText || ""}{" "}
-                </p>
-              )}
-              {props.children}
-            </div>
-            <div className=" grid grid-rows-[repeat(2,_auto)] gap-10">
-              <div
-                className={cn(
-                  " flex lg:hidden gap-4",
-                  state.paymentScreen === "options" && "justify-center",
-                )}
-              >
+          {loadingRate ? (
+            <LoadingPage />
+          ) : (
+            <>
+              <div>
                 {state.paymentScreen !== "options" && (
-                  <Button
-                    onClick={() => {
-                      setState((prev) => ({
-                        ...prev,
-                        errorText: "",
-                        paymentScreen: "options",
-                      }));
-                    }}
-                    className="border-[#E6E6E7] px-1 border-[0.5px] w-auto flex-1 text-xs whitespace-nowrap py-1 items-center bg-white text-[#55515B]"
-                  >
-                    x Change Payment Method
-                  </Button>
+                  <div className=" flex lg:hidden gap-4 font-semibold py-4 text-[#3D3844]">
+                    <Icon className=" fill-[#9E9BA1]" /> {Text}
+                  </div>
                 )}
-                <Button
-                  onClick={() => {
-                    if (onOpenChange) {
-                      onOpenChange(false);
-                    }
-                  }}
-                  className="border-[#E6E6E7]  w-auto  text-xs px-2 border-[0.5px] flex-1 items-center bg-white text-[#55515B]"
-                >
-                  x Cancel Payment
-                </Button>
+
+                <TopContainer />
               </div>
-              <div className=" justify-self-center flex gap-4 items-center font-normal text-[10px] text-[#9E9BA1]">
-                <CertifiedIcon /> PCI DSS Certified
+              <div className="grid gap-4 grid-rows-[1fr_auto] overflow-y-auto max-h-max hide-scrollbar">
+                <div>
+                  <button
+                    type="button"
+                    className=" absolute -top-4 -right-4 z-30 hover:bg-purple-900 hover:text-white h-4 text-xs w-4 rounded-full font-semibold cursor-pointer"
+                    onClick={() => {
+                      if (onOpenChange) {
+                        onOpenChange(false);
+                      }
+                    }}
+                  >
+                    X
+                  </button>
+                  {state.errorText && (
+                    <p className=" bg-red-500 text-center p-1 rounded-lg px-2 text-white">
+                      <ErrorIcon className=" inline mr-3 align-middle" />{" "}
+                      {state?.errorText || ""}{" "}
+                    </p>
+                  )}
+                  {props.children}
+                </div>
+                <div className=" grid grid-rows-[repeat(2,_auto)] gap-10">
+                  <div
+                    className={cn(
+                      " flex lg:hidden gap-4",
+                      state.paymentScreen === "options" && "justify-center",
+                    )}
+                  >
+                    {state.paymentScreen !== "options" && (
+                      <Button
+                        onClick={() => {
+                          setState((prev) => ({
+                            ...prev,
+                            errorText: "",
+                            paymentScreen: "options",
+                          }));
+                        }}
+                        className="border-[#E6E6E7] px-1 border-[0.5px] w-auto flex-1 text-xs whitespace-nowrap py-1 items-center bg-white text-[#55515B]"
+                      >
+                        x Change Payment Method
+                      </Button>
+                    )}
+                    <Button
+                      onClick={() => {
+                        if (onOpenChange) {
+                          onOpenChange(false);
+                        }
+                      }}
+                      className="border-[#E6E6E7]  w-auto  text-xs px-2 border-[0.5px] flex-1 items-center bg-white text-[#55515B]"
+                    >
+                      x Cancel Payment
+                    </Button>
+                  </div>
+                  <div className=" justify-self-center flex gap-4 items-center font-normal text-[10px] text-[#9E9BA1]">
+                    <CertifiedIcon /> PCI DSS Certified
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
         </main>
       </div>
     </div>
@@ -123,25 +129,17 @@ export function MainLayout(props: Props) {
 }
 
 const TopContainer = () => {
-  const { config, state } = useCheckoutContext();
-  const { paymentRate } = useGetPaymentRate({
-    enabler: !!state?.open,
-    params: {
-      to: "USD",
-      from: config?.currency || "USD",
-    },
-    merchantKeys: config?.merchantKey,
-  });
+  const { config, rate } = useCheckoutContext();
   return (
     <div className=" bg-[#01008E] py-5 px-3 md:py-4 md:px-8 grid gap-4 grid-rows-[51px_1fr] rounded-xl text-white">
       <div className=" flex gap-4 items-center justify-between border-b border-b-white text-white leading-8">
         <p className=" text-sm whitespace-nowrap">{config?.email}</p>
-        <p className=" text-sm">{"Leagues Pass"}</p>
+        <p className=" text-sm">{"League Pass"}</p>
       </div>
       <div className=" flex self-start items-center gap-4 justify-between">
         <div className=" relative flex gap-1 items-center leading-10 text-sm">
           <span className=" whitespace-nowrap">
-            {`${paymentRate?.from || "USD"} 1 = ${paymentRate?.to || "NGN"} ${formatNumber(paymentRate?.rate || 0, 2)}`}{" "}
+            {`${rate?.from || "USD"} 1 = ${rate?.to || "NGN"} ${formatNumber(rate?.rate || 0, 2)}`}{" "}
           </span>
           <InforComponent />
         </div>
@@ -153,8 +151,7 @@ const TopContainer = () => {
             </span>
           </h3>
           <span className=" inline-block bg-[#32BB78] text-xs whitespace-nowrap p-[3px_10px] rounded">
-            NGN{" "}
-            {formatNumber((paymentRate?.rate || 1) * (config?.amount || 0), 2)}
+            NGN {formatNumber((rate?.rate || 1) * (config?.amount || 0), 2)}
           </span>
         </div>
       </div>

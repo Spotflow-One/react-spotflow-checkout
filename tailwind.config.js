@@ -7,7 +7,7 @@ import {
 export default {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{ts,tsx}", "./lib/**/*.{ts,tsx}"],
-  important: "#spotflow-checkout-container",
+  important: ["#spotflow-checkout-container", "#spotflow-checkout-popper"],
   // prefix: "rspc-",
   theme: {
     extend: {
@@ -26,7 +26,8 @@ export default {
   plugins: [
     scopedPreflightStyles({
       isolationStrategy: isolateInsideOfContainer(
-        "#spotflow-checkout-container",
+        // "#spotflow-checkout-container",
+        "#spotflow-checkout-popper",
       ),
     }),
   ],

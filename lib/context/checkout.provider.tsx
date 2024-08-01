@@ -1,5 +1,9 @@
 import { Button } from "@library/components/button/button";
-import { PaymentResponseData } from "@library/hooks/queries/types/payment.types";
+import { useGetPaymentRate } from "@library/hooks/queries/payments";
+import {
+  GetPaymentRateResponseData,
+  PaymentResponseData,
+} from "@library/hooks/queries/types/payment.types";
 import { InitialiseConfig, ISetState } from "@library/types";
 import React from "react";
 
@@ -30,6 +34,7 @@ const initialState: StateType = {
 
 type CheckoutStateType = {
   state?: StateType;
+  rate?: GetPaymentRateResponseData;
   onOpenChange?: (_val: boolean) => void;
   onPaymentStatus?: (_val: string) => void;
   setState?: ISetState<StateType>;
@@ -38,6 +43,7 @@ type CheckoutStateType = {
   onPaymentResponse?: (_val: PaymentResponseData) => void;
   onDataUpdated?: (_val: InitialiseConfig) => void;
   onErrorText?: (_val: string) => void;
+  loadingRate?: boolean;
 };
 const CheckoutContext = React.createContext<CheckoutStateType>({});
 
@@ -63,6 +69,14 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
       paymentScreen: values,
     }));
   };
+  const { paymentRate, fetchingPaymentRate } = useGetPaymentRate({
+    enabler: !!checkoutContext?.open,
+    params: {
+      to: "USD",
+      from: checkoutContext?.initialData?.currency || "USD",
+    },
+    merchantKeys: checkoutContext?.initialData?.merchantKey,
+  });
 
   const onPaymentResponse = (values: PaymentResponseData) => {
     setCheckoutContext((prev) => ({
@@ -117,6 +131,8 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
         onLoading(_val) {
           setCheckoutContext((prev) => ({ ...prev, loading: _val }));
         },
+        rate: paymentRate,
+        loadingRate: fetchingPaymentRate,
       }}
     >
       {typeof props.children === "function" ? (
@@ -139,13 +155,11 @@ export const useCheckoutContext = () => {
     onPaymentResponse,
     onPaymentScreen,
     setState,
+    loadingRate,
+    rate,
   } = React.useContext(CheckoutContext);
   if (!state) throw new Error("context is not available");
-  // if (!state?.initialData) throw new Error("context is not available");
   if (!setState) throw new Error("context is not available");
-
-  // if (!state?.initialData)
-  //   throw new Error("Initial Config Data is not provided");
 
   return {
     state,
@@ -158,5 +172,7 @@ export const useCheckoutContext = () => {
     onPaymentResponse,
     onPaymentScreen,
     setState,
+    rate,
+    loadingRate,
   };
 };

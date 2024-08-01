@@ -18,27 +18,27 @@ const queryClient = new QueryClient({
 export function PaymentCheckoutButton(props: CheckoutPaymentProps) {
   const { data, actionText, ...rest } = props;
   return (
-    <CheckoutProvider data={data}>
-      {(values, onOpenChange) => {
-        return (
-          <React.Fragment>
-            <button
-              {...rest}
-              type="button"
-              onClick={() => {
-                onOpenChange(true);
-              }}
-            >
-              {actionText || "Pay Amount"}
-            </button>
-            <Popper open={values.open}>
-              <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <CheckoutProvider data={data}>
+        {(values, onOpenChange) => {
+          return (
+            <React.Fragment>
+              <button
+                {...rest}
+                type="button"
+                onClick={() => {
+                  onOpenChange(true);
+                }}
+              >
+                {actionText || "Pay Amount"}
+              </button>
+              <Popper open={values.open}>
                 {values.open ? <Checkouts /> : null}
-              </QueryClientProvider>
-            </Popper>
-          </React.Fragment>
-        );
-      }}
-    </CheckoutProvider>
+              </Popper>
+            </React.Fragment>
+          );
+        }}
+      </CheckoutProvider>
+    </QueryClientProvider>
   );
 }

@@ -16,17 +16,17 @@ const queryClient = new QueryClient({
 
 export function PaymentContextProvider(props: React.PropsWithChildren) {
   return (
-    <CheckoutProvider>
-      {(values) => (
-        <React.Fragment>
-          <>{props.children}</>
-          <Popper open={values.open}>
-            <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <CheckoutProvider>
+        {(values) => (
+          <React.Fragment>
+            <>{props.children}</>
+            <Popper open={values.open}>
               <Checkouts />
-            </QueryClientProvider>
-          </Popper>
-        </React.Fragment>
-      )}
-    </CheckoutProvider>
+            </Popper>
+          </React.Fragment>
+        )}
+      </CheckoutProvider>
+    </QueryClientProvider>
   );
 }
