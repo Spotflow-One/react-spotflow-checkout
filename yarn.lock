@@ -1449,6 +1449,7 @@ __metadata:
     rollup-plugin-typescript2: "npm:^0.36.0"
     tailwind-merge: "npm:^2.3.0"
     tailwindcss: "npm:^3.4.4"
+    tailwindcss-scoped-preflight: "npm:^3.4.3"
     typescript: "npm:^5.2.2"
     uuid: "npm:^10.0.0"
     vite: "npm:^5.3.1"
@@ -7024,6 +7025,16 @@ __metadata:
   version: 2.4.0
   resolution: "tailwind-merge@npm:2.4.0"
   checksum: 10c0/77bd20647d08db78a0bdf7b57d4b904479aee7727f44570f8834d62a1aa56f42d7ae68ac959e3d610c9f188aa164eeefb6c43df4f0c8bb7cfc3418e1575bfecb
+  languageName: node
+  linkType: hard
+
+"tailwindcss-scoped-preflight@npm:^3.4.3":
+  version: 3.4.3
+  resolution: "tailwindcss-scoped-preflight@npm:3.4.3"
+  peerDependencies:
+    postcss: ^8
+    tailwindcss: ^3
+  checksum: 10c0/4fc59b86a0c3ead453e39a84b14268406ed2cc4d1a4dc01ed68ae6abc67613a8b6f41f5e9ea916b7786c472db11d98c05c12f9a118b247f427502d8f043dd606
   languageName: node
   linkType: hard
 

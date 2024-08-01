@@ -1,8 +1,13 @@
+import {
+  scopedPreflightStyles,
+  isolateInsideOfContainer,
+} from "tailwindcss-scoped-preflight";
 /** @type {import('tailwindcss').Config} */
 
 export default {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{ts,tsx}", "./lib/**/*.{ts,tsx}"],
+  important: "#spotflow-checkout-container",
   // prefix: "rspc-",
   theme: {
     extend: {
@@ -18,5 +23,11 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    scopedPreflightStyles({
+      isolationStrategy: isolateInsideOfContainer(
+        "#spotflow-checkout-container",
+      ),
+    }),
+  ],
 };

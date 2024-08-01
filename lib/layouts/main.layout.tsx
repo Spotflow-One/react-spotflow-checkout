@@ -37,7 +37,10 @@ export function MainLayout(props: Props) {
   const { state, onOpenChange, setState } = useCheckoutContext();
 
   return (
-    <div className=" relative max-[400px]:min-h-[600px] lg:h-full lg:max-h-[70dvh] ">
+    <div
+      id="spotflow-checkout-container"
+      className=" relative max-[400px]:min-h-[600px] lg:h-full lg:max-h-[70dvh] "
+    >
       <div className="lg:shadow-2xl relative rounded-lg bg-white grid min-h-[400px] h-full grid-rows-[auto_1fr] lg:grid-rows-1 grid-cols-1 lg:grid-cols-[200px_1fr] max-w-[390px] lg:max-w-[750px] mx-auto">
         <Sidebar onClick={props.onChange} />{" "}
         <main
