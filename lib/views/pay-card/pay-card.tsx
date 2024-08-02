@@ -33,6 +33,7 @@ type CardDetailType = {
 };
 export function PayCard() {
   const { config, setState } = useCheckoutContext();
+  const [activate, setActivate] = React.useState(false);
 
   const [pageState, setPageState] = React.useState({
     reference: "",
@@ -66,7 +67,16 @@ export function PayCard() {
           reference: _val?.reference,
           isDS: true,
         }));
-        return window.open(_val?.authorization?.redirectUrl, "_blank'");
+        const popup = window.open(_val?.authorization?.redirectUrl, "_blank'");
+        // eslint-disable-next-line no-var
+        var timer = setInterval(function () {
+          if (popup?.closed) {
+            clearInterval(timer);
+            setActivate(true);
+          }
+        }, 1000);
+
+        return;
       } else {
         if (_val.status === "pending_authorization") {
           setPageState((prev) => ({
@@ -216,7 +226,7 @@ export function PayCard() {
                 screen: "success",
               }));
             }}
-            isDS={pageState.isDS}
+            isDS={pageState.isDS && activate}
           />
         </div>
       ) : (
@@ -494,12 +504,14 @@ type WaitingProps = {
   isDsSucceeded?: boolean;
   reference?: string;
   onSuccess?: () => void;
+  popup?: Window | null;
 };
 const Waiting = (props: WaitingProps) => {
   const queryClient = useQueryClient();
   const { config } = useCheckoutContext();
+
   const { payment } = useVerifyPaymentTransfer({
-    merchantKey: config.merchantKey,
+    merchantKey: config?.merchantKey,
     enabler: !!props.reference && !!props.isDS,
     reference: props.reference || "",
     interval: 17000,
