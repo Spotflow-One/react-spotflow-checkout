@@ -87,7 +87,7 @@ export function CheckoutProvider(props: CheckoutProviderProps) {
 
   const onOpenChange = (values: boolean) => {
     if (!values) {
-      setCheckoutContext(initialState);
+      setCheckoutContext({ ...initialState });
     } else {
       setCheckoutContext((prev) => ({
         ...prev,

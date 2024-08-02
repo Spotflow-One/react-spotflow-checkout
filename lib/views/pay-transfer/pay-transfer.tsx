@@ -43,11 +43,11 @@ export function PayTransfer() {
     reference: state?.payment?.reference || "",
     interval: 17000,
     merchantKey: config?.merchantKey,
-    isPollingEnabled: state.paymentScreen === "transfer",
+    isPollingEnabled: state?.paymentScreen === "transfer",
   });
 
   React.useEffect(() => {
-    if (state.paymentScreen !== "transfer") {
+    if (state?.paymentScreen !== "transfer") {
       setTransferState((prev) => ({
         ...prev,
         screen: "detail",
@@ -80,7 +80,7 @@ export function PayTransfer() {
         <TransferDetail
           onSubmit={() => {
             // setScreen("wait");
-            if (state.payment) {
+            if (state?.payment) {
               setTransferState((prev) => ({
                 ...prev,
                 screen: "wait",
@@ -90,7 +90,7 @@ export function PayTransfer() {
               }
             }
           }}
-          data={state.payment}
+          data={state?.payment}
           start={transferState.screen === "detail"}
           loading={state.loading}
         />
