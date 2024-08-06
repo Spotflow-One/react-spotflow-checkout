@@ -45,14 +45,15 @@ export function PayCard() {
   const { makePayment, makingPayment } = useCardPayment({
     onSuccess(_val) {
       if (_val.status === "failed") {
-        setState((prev) => ({
-          ...prev,
-          errorText: _val?.providerMessage || "Payment Failed",
-        }));
+        // setState((prev) => ({
+        //   ...prev,
+        //   errorText: _val?.providerMessage || "Payment Failed",
+        // }));
         setPageState((prev) => ({
           ...prev,
-          // screen: "pin",
+          screen: "warning",
           reference: _val?.reference,
+          providerMessage: _val?.providerMessage || "",
           isDS: false,
         }));
         return;
@@ -204,6 +205,7 @@ export function PayCard() {
                 screen: "detail",
               }));
             }}
+            message={pageState.providerMessage}
           />
         </div>
       ) : pageState.screen === "success" ? (
@@ -439,6 +441,7 @@ const OtpForm = (props: OtpFormProps) => {
 
 type WarningViewProps = {
   onCard?: () => void;
+  message?: string;
 };
 const WarningView = (props: WarningViewProps) => {
   const { setState } = useCheckoutContext();
@@ -447,7 +450,7 @@ const WarningView = (props: WarningViewProps) => {
       <div className=" max-w-[400px] w-full mx-auto">
         <WarningIcon className=" mx-auto" />
         <h3 className="text-[#55515B] text-center text-base mx-auto max-w-[200px] lg:max-w-max lg:text-xl font-semibold">
-          Incorrect otp. please retry with the correct otp
+          {props.message || " Incorrect otp. please retry with the correct otp"}
         </h3>
       </div>
       <div className=" grid gap-4">
