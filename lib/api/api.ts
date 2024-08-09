@@ -1,7 +1,7 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
 
 const Api = axios.create({
-  baseURL: "http://dev-api.spotflow.one" + "/api/v1",
+  baseURL: "https://dev-api.spotflow.one" + "/api/v1",
 });
 
 Api.interceptors.request.use(
