@@ -6,6 +6,8 @@ import { PayCard } from "@library/views/pay-card/pay-card";
 import { useCheckoutContext } from "@library/context/checkout.provider";
 import { sidebarDataLinkList, SidebarLink } from "@library/layouts/sidebar";
 import React from "react";
+import { usePaymentTransfer } from "@library/hooks/queries/payments";
+import { generatePaymentReference } from "@library/utils/ref";
 
 type ScreenType = "card" | "ussd" | "transfer" | "options";
 export function Checkouts() {
@@ -73,6 +75,34 @@ type PaymentOptionsProps = {
   onClick(_val: string): void;
 };
 const PaymentOptions = (props: PaymentOptionsProps) => {
+  const { config, setState, onLoading } = useCheckoutContext();
+
+  const { transferPayment, transferringPayment } = usePaymentTransfer({
+    onSuccess(_val) {
+      if (onLoading) {
+        onLoading(false);
+      }
+      if (_val.status === "failed") {
+        setState((prev) => ({
+          ...prev,
+          errorText: _val.providerMessage || "Payment Failed",
+        }));
+        return;
+      }
+      setState((prev) => ({
+        ...prev,
+        payment: _val,
+      }));
+    },
+    reference: config?.merchantKey,
+    onError(_val) {
+      setState((prev) => ({
+        ...prev,
+        errorText: _val || "Payment Failed",
+      }));
+    },
+  });
+
   return (
     <div className="grid grid-rows-[80px_1fr] gap-4">
       <h3 className=" text-xs text-[#9E9BA1]">
@@ -89,7 +119,33 @@ const PaymentOptions = (props: PaymentOptionsProps) => {
               value={""}
               data={field}
               onClick={() => {
+                if (field.value === "transfer") {
+                  if (config?.email) {
+                    transferPayment({
+                      payload: {
+                        amount: config?.amount,
+                        channel: "bank_transfer",
+                        currency: config?.currency || "USD",
+                        customer: {
+                          email: config?.email,
+                        },
+                        reference:
+                          config.reference || generatePaymentReference(),
+                        // planId: config.plan,
+                      },
+                    });
+                    setState((prev) => ({
+                      ...prev,
+                      errorText: "",
+                      loading: transferringPayment,
+                    }));
+                  }
+                }
                 props.onClick(field.value);
+                setState((prev) => ({
+                  ...prev,
+                  errorText: "",
+                }));
               }}
             />
           ))}
